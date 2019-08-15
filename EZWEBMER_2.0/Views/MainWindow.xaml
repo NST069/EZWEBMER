@@ -11,9 +11,25 @@
         <viewmodels:MainViewModel/>
     </Window.DataContext>
     <Grid>
-        <StackPanel>
-            <Label HorizontalAlignment="Center" FontSize="40" Content="{Binding Clicks}"/>
-            <Button Content="Button" Command="{Binding Click}"/>
-        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Grid.Column="0">
+                <Image Height="300" Source="{Binding Path=Image_Path, Mode=TwoWay}"/>
+                <Button Content="Open Image" Command="{Binding OpenImage}"/>
+                <Label Content="{Binding Image_Path}"/>
+            </StackPanel>
+            <StackPanel Grid.Row="0" Grid.Column="1">
+                <Button Content="Open Audio" Command="{Binding OpenAudio}"/>
+                <Label Content="{Binding Audio_Path}"/>
+            </StackPanel>
+            <Button Grid.Row="1" Content="Submit" Grid.ColumnSpan="2" />
+        </Grid>
     </Grid>
 </Window>
