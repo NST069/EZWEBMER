@@ -1,0 +1,4 @@
+webm: 
+	static pic+music
+		ffmpeg -loop 1 -r 1 -i [pic] -i [mus] -b:v 0 -crf 2 -b:a 160K -shortest -g 9999 -pix_fmt yuv420p -speed 0 -deadline 0 -threads 4 [out].webm
+		
