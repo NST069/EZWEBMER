@@ -4,9 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EZWEBMER_2._0"
+        xmlns:viewmodels="clr-namespace:EZWEBMER_2._0.Viewmodels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <viewmodels:MainViewModel/>
+    </Window.DataContext>
     <Grid>
-        
+        <StackPanel>
+            <Label HorizontalAlignment="Center" FontSize="40" Content="{Binding Clicks}"/>
+            <Button Content="Button" Command="{Binding Click}"/>
+        </StackPanel>
     </Grid>
 </Window>
