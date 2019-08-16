@@ -79,6 +79,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\DelegateCommand.cs" />
+    <Compile Include="Models\FFMpegProcess.cs" />
     <Compile Include="Viewmodels\MainViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

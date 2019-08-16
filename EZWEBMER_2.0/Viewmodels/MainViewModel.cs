@@ -46,6 +46,13 @@ namespace EZWEBMER_2._0.Viewmodels
                 });
             }
         }
+        public ICommand Render{
+            get {
+                return new Models.DelegateCommand((obj) => {
+                    Models.FFMpegProcess.Start(Image_Path, Audio_Path);
+                });
+            }
+        }
 
         public String OpenFile(String filter="") {
             Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
