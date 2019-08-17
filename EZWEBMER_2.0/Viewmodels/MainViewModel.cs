@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -34,7 +35,7 @@ namespace EZWEBMER_2._0.Viewmodels
             get {
                 return new Models.DelegateCommand((obj) =>
                 {
-                    Image_Path = OpenFile("Image");
+                    Image_Path = Models.FileHandler.OpenFile("Image");
                 });
             }
         }
@@ -42,32 +43,23 @@ namespace EZWEBMER_2._0.Viewmodels
             get {
                 return new Models.DelegateCommand((obj) =>
                 {
-                    Audio_Path = OpenFile("Audio");
+                    Audio_Path = Models.FileHandler.OpenFile("Audio");
                 });
             }
         }
         public ICommand Render{
             get {
-                return new Models.DelegateCommand((obj) => {
-                    Models.FFMpegProcess.Start(Image_Path, Audio_Path);
+                return new Models.DelegateCommand((obj) =>
+                {
+                    if (!File.Exists(Image_Path)) System.Windows.MessageBox.Show("No Picture Found");
+                    if (!File.Exists(Audio_Path)) System.Windows.MessageBox.Show("No Music Found");
+                    if (File.Exists(Image_Path) && File.Exists(Audio_Path))
+                    {
+                        String saveFile = Models.FileHandler.SaveFile(".webm");
+                        Models.FFMpegProcess.Start(Image_Path, Audio_Path, saveFile);
+                    }
                 });
             }
-        }
-
-        public String OpenFile(String filter="") {
-            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
-            switch (filter) {
-                case "Audio":
-                    ofd.Filter = "Audio Files|*.wav;*.mp3";
-                    break;
-                case "Image":
-                    ofd.Filter = "Images|*.png;*.jpg";
-                    break;
-                default:
-                    break;
-            }
-            if (ofd.ShowDialog() == true) return ofd.FileName;
-            return "";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
