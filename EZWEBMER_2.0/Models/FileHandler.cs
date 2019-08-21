@@ -28,7 +28,7 @@ namespace EZWEBMER_2._0.Models
 
         public static String SaveFile(String format) {
             Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
-            //sfd.Filter = format;
+            sfd.Filter = "Videos|*."+format;
             sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             sfd.AddExtension = true;
             if (sfd.ShowDialog() == true) return sfd.FileName;

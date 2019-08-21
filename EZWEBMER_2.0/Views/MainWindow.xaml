@@ -26,6 +26,21 @@
                 <Label Content="{Binding Image_Path}"/>
             </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="1">
+                <Grid Height="300">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <MediaElement Grid.Row="0" Source="{Binding Audio_Path}" LoadedBehavior="Manual" UnloadedBehavior="Stop"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="{Binding S_PlayPause}" Command="{Binding PlayPause}"/>
+                        <Slider Grid.Column="1" Minimum="0" Maximum="{Binding MusicInfo.duration}" LargeChange="60" SmallChange="10"/> <!-- Value="{Binding }"/> -->
+                    </Grid>
+                </Grid>
                 <Button Content="Open Audio" Command="{Binding OpenAudio}"/>
                 <Label Content="{Binding Audio_Path}"/>
             </StackPanel>

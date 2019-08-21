@@ -30,6 +30,14 @@ namespace EZWEBMER_2._0.Viewmodels
                 OnPropertyChanged("Audio_Path");
             }
         }
+        private Models.MusicInfo _musicinfo;
+        public Models.MusicInfo MusicInfo {
+            get { return _musicinfo; }
+            set {
+                _musicinfo = value;
+                OnPropertyChanged("Musicinfo");
+            }
+        }
 
         public ICommand OpenImage {
             get {
@@ -44,7 +52,40 @@ namespace EZWEBMER_2._0.Viewmodels
                 return new Models.DelegateCommand((obj) =>
                 {
                     Audio_Path = Models.FileHandler.OpenFile("Audio");
+                    MusicInfo = new Models.MusicInfo(Audio_Path);
                 });
+            }
+        }
+        private String s_playpause = "Play";
+        public String S_PlayPause {
+            get { return s_playpause; }
+            set {
+                s_playpause = value;
+                OnPropertyChanged("PlayPause");
+            }
+        }
+        public ICommand PlayPause {
+            get {
+                return new Models.DelegateCommand((obj) =>
+                {
+                    /*
+                    if (S_PlayPause.Equals("Play"))
+                    {
+                        //play
+                        MusicInfo.player.PlaySync();
+                        //S_PlayPause = "Pause";
+                    }
+                    else if (S_PlayPause.Equals("Pause")) {
+                        //pause
+                        MusicInfo.player.Stop();
+                        S_PlayPause = "Play";
+                    }
+                    */
+
+                    if (MusicInfo.isPlaying) MusicInfo.Stop();
+                    else MusicInfo.Play();
+
+                }, (obj)=>{ return File.Exists(Audio_Path); });
             }
         }
         public ICommand Render{
@@ -55,7 +96,7 @@ namespace EZWEBMER_2._0.Viewmodels
                     if (!File.Exists(Audio_Path)) System.Windows.MessageBox.Show("No Music Found");
                     if (File.Exists(Image_Path) && File.Exists(Audio_Path))
                     {
-                        String saveFile = Models.FileHandler.SaveFile(".webm");
+                        String saveFile = Models.FileHandler.SaveFile("webm");
                         Models.FFMpegProcess.Start(Image_Path, Audio_Path, saveFile);
                     }
                 });
