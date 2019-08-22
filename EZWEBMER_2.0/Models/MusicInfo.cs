@@ -12,7 +12,12 @@ namespace EZWEBMER_2._0.Models
     {
         public bool isValid;
         private AudioFileReader afr;
-        public String Path;
+        private String _path;
+        public String Path
+        {
+            get { return _path; }
+            set { _path = value; }
+        }
         public System.Media.SoundPlayer player;
         public bool isPlaying;
         public int duration;
@@ -38,6 +43,10 @@ namespace EZWEBMER_2._0.Models
         public void Stop() {
             player.Stop();
             isPlaying = false;
+        }
+
+        public enum Formats {
+            wav
         }
     }
 }

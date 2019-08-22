@@ -14,10 +14,16 @@ namespace EZWEBMER_2._0.Models
             switch (filter)
             {
                 case "Audio":
-                    ofd.Filter = "Audio Files|*.wav;*.mp3";
+                    String sa = "";
+                    foreach (MusicInfo.Formats x in Enum.GetValues(typeof(MusicInfo.Formats)))
+                        sa += "*." + x + ";";
+                    ofd.Filter = "Audio Files|" + sa; //TODO: Make MP3-friendly
                     break;
                 case "Image":
-                    ofd.Filter = "Images|*.png;*.jpg";
+                    String si = "";
+                    foreach (ImageInfo.Formats x in Enum.GetValues(typeof(ImageInfo.Formats)))
+                        si += "*." + x + ";";
+                    ofd.Filter = "Images|" + si;
                     break;
                 default:
                     break;
@@ -26,12 +32,19 @@ namespace EZWEBMER_2._0.Models
             return "";
         }
 
-        public static String SaveFile(String format) {
+        public static String SaveFile(String format = "webm") {
             Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
-            sfd.Filter = "Videos|*."+format;
+            String s = "";
+            foreach (VideoInfo.Formats x in Enum.GetValues(typeof(VideoInfo.Formats)))
+                s += "Videos|*." + x + "|";
+            sfd.Filter = s.Substring(0, s.Length-1);
             sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             sfd.AddExtension = true;
-            if (sfd.ShowDialog() == true) return sfd.FileName;
+            if (sfd.ShowDialog() == true)
+            {
+                if (System.IO.File.Exists(sfd.FileName)) System.IO.File.Delete(sfd.FileName);
+                return sfd.FileName;
+            }
             return "";
         }
     }

@@ -10,17 +10,14 @@ namespace EZWEBMER_2._0.Models
 {
     static class FFMpegProcess
     {
-        public static void Start(String p, String m, String s) { // clean required
-            if (!File.Exists(p)) System.Windows.MessageBox.Show("No Picture Found");
-            if (!File.Exists(m)) System.Windows.MessageBox.Show("No Music Found");
-            if (File.Exists(p) && File.Exists(m))
+        public static void Start(ImageInfo p, MusicInfo m, String s) {
+            if (p!=null && m!=null)
             {
                 String folder = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName + @"\ffmpeg\";
-                int duration = (int)(new AudioFileReader(m).TotalTime.TotalSeconds);
                 String cmdtext = "/k cd " + folder + " & " +
                     "ffmpeg -loop 1 -r 1 " +
-                    "-i \"" + p + "\" -i \"" + m +
-                    "\" -t " + duration +
+                    "-i \"" + p.Path + "\" -i \"" + m.Path +
+                    "\" -t " + m.duration +
                     " -b:v 0 -crf 2 -b:a 160K -shortest -g 9999 " +
                     "-pix_fmt yuv420p -speed 0 -deadline 0 -threads 4 " +
                     s;

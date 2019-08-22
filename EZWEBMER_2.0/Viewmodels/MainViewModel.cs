@@ -13,29 +13,12 @@ namespace EZWEBMER_2._0.Viewmodels
 {
     class MainViewModel : INotifyPropertyChanged
     {
-        private String _image_path;
-        public String Image_Path {
-            get { return _image_path; }
-            set {
-                _image_path = value;
-                OnPropertyChanged("Image_Path");
-            }
-        }
         private Models.ImageInfo _imageInfo;
         public Models.ImageInfo ImageInfo {
             get { return _imageInfo; }
             set {
                 _imageInfo = value;
                 OnPropertyChanged("ImageInfo");
-            }
-        }
-
-        private String _audio_path;
-        public String Audio_Path {
-            get { return _audio_path; }
-            set {
-                _audio_path = value;
-                OnPropertyChanged("Audio_Path");
             }
         }
         private Models.MusicInfo _musicinfo;
@@ -47,12 +30,33 @@ namespace EZWEBMER_2._0.Viewmodels
             }
         }
 
+        public String ImageStr {
+            get {
+                if (ImageInfo != null)
+                    return "["+(ImageInfo.isValid?"Valid":"Invalid")+"]"+ImageInfo.Path+" "+ImageInfo.Width+"x"+ImageInfo.Height; 
+            return "Picture Not Selected";
+            }
+            set { OnPropertyChanged("ImageStr"); }
+        }
+        public String MusicStr {
+            get {
+                if (MusicInfo != null)
+                    return "[" + (MusicInfo.isValid ? "Valid" : "Invalid") + "]" + MusicInfo.Path + " " + (MusicInfo.isPlaying?"Playing":"Stopped");
+                return "Music Not Selected";
+            }
+            set { OnPropertyChanged("MusicStr"); }
+        }
+
         public ICommand OpenImage {
             get {
                 return new Models.DelegateCommand((obj) =>
                 {
-                    Image_Path = Models.FileHandler.OpenFile("Image");
-                    ImageInfo = new Models.ImageInfo(Image_Path);
+                    String Image_Path = Models.FileHandler.OpenFile("Image");
+                    if (Image_Path != "")
+                    {
+                        ImageInfo = new Models.ImageInfo(Image_Path);
+                        ImageStr += "";
+                    }
                 });
             }
         }
@@ -60,8 +64,12 @@ namespace EZWEBMER_2._0.Viewmodels
             get {
                 return new Models.DelegateCommand((obj) =>
                 {
-                    Audio_Path = Models.FileHandler.OpenFile("Audio");
-                    MusicInfo = new Models.MusicInfo(Audio_Path);
+                    String Audio_Path = Models.FileHandler.OpenFile("Audio");
+                    if (Audio_Path != "")
+                    {
+                        MusicInfo = new Models.MusicInfo(Audio_Path);
+                        MusicStr += "";
+                    }
                 });
             }
         }
@@ -77,22 +85,16 @@ namespace EZWEBMER_2._0.Viewmodels
             get {
                 return new Models.DelegateCommand((obj) =>
                 {
-                    /*
-                    if (S_PlayPause.Equals("Play"))
+                    if (MusicInfo.isPlaying)
                     {
-                        //play
-                        MusicInfo.player.PlaySync();
-                        //S_PlayPause = "Pause";
-                    }
-                    else if (S_PlayPause.Equals("Pause")) {
-                        //pause
-                        MusicInfo.player.Stop();
+                        MusicInfo.Stop();
                         S_PlayPause = "Play";
                     }
-                    */
-
-                    if (MusicInfo.isPlaying) MusicInfo.Stop();
-                    else MusicInfo.Play();
+                    else
+                    {
+                        S_PlayPause = "Stop";
+                        MusicInfo.Play();
+                    }
 
                 }, (obj)=>{
                     if (MusicInfo != null) return MusicInfo.isValid;
@@ -104,12 +106,14 @@ namespace EZWEBMER_2._0.Viewmodels
             get {
                 return new Models.DelegateCommand((obj) =>
                 {
-                    if (!File.Exists(Image_Path)) System.Windows.MessageBox.Show("No Picture Found");
-                    if (!File.Exists(Audio_Path)) System.Windows.MessageBox.Show("No Music Found");
-                    if (File.Exists(Image_Path) && File.Exists(Audio_Path))
+                    
+                    if (ImageInfo!=null && MusicInfo!=null)
                     {
-                        String saveFile = Models.FileHandler.SaveFile("webm");
-                        Models.FFMpegProcess.Start(Image_Path, Audio_Path, saveFile);
+                        String saveFile = Models.FileHandler.SaveFile();
+                        if (saveFile != "")
+                        {
+                            Models.FFMpegProcess.Start(ImageInfo, MusicInfo, saveFile);
+                        }
                     }
                 }, (obj)=> {
                     if (MusicInfo != null && ImageInfo != null)
