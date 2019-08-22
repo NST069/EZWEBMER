@@ -94,7 +94,10 @@ namespace EZWEBMER_2._0.Viewmodels
                     if (MusicInfo.isPlaying) MusicInfo.Stop();
                     else MusicInfo.Play();
 
-                }, (obj)=>{ return File.Exists(Audio_Path); });
+                }, (obj)=>{
+                    if (MusicInfo != null) return MusicInfo.isValid;
+                    return false;
+                });
             }
         }
         public ICommand Render{
@@ -108,6 +111,10 @@ namespace EZWEBMER_2._0.Viewmodels
                         String saveFile = Models.FileHandler.SaveFile("webm");
                         Models.FFMpegProcess.Start(Image_Path, Audio_Path, saveFile);
                     }
+                }, (obj)=> {
+                    if (MusicInfo != null && ImageInfo != null)
+                        return MusicInfo.isValid && ImageInfo.isValid;
+                    return false;
                 });
             }
         }
