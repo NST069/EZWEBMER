@@ -34,7 +34,7 @@ namespace EZWEBMER_2._0.Viewmodels
             get {
                 if (ImageInfo != null)
                     return "["+(ImageInfo.isValid?"Valid":"Invalid")+"]"+ImageInfo.Path+" "+ImageInfo.Width+"x"+ImageInfo.Height; 
-            return "Picture Not Selected";
+                return "Picture Not Selected";
             }
             set { OnPropertyChanged("ImageStr"); }
         }
@@ -69,17 +69,17 @@ namespace EZWEBMER_2._0.Viewmodels
                     {
                         MusicInfo = new Models.MusicInfo(Audio_Path);
                         MusicStr += "";
+                        S_PlayPause += "";
                     }
                 });
             }
         }
-        private String s_playpause = "Play";
         public String S_PlayPause {
-            get { return s_playpause; }
-            set {
-                s_playpause = value;
-                OnPropertyChanged("PlayPause");
+            get {
+                if (MusicInfo != null && MusicInfo.isPlaying) return "Stop";
+                else return "Play";
             }
+            set { OnPropertyChanged("Playpause"); }
         }
         public ICommand PlayPause {
             get {
@@ -88,13 +88,14 @@ namespace EZWEBMER_2._0.Viewmodels
                     if (MusicInfo.isPlaying)
                     {
                         MusicInfo.Stop();
-                        S_PlayPause = "Play";
                     }
                     else
                     {
-                        S_PlayPause = "Stop";
                         MusicInfo.Play();
                     }
+
+                    MusicStr += "";
+                    S_PlayPause += "";
 
                 }, (obj)=>{
                     if (MusicInfo != null) return MusicInfo.isValid;

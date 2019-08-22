@@ -10,11 +10,7 @@ namespace EZWEBMER_2._0.Models
     class ImageInfo
     {
         public bool isValid;
-        private String _path;
-        public String Path {
-            get { return _path; }
-            set { _path = value; }
-        }
+        public String Path { get; set; }
         private BitmapImage image;
         public int Height;
         public int Width;

@@ -12,15 +12,10 @@ namespace EZWEBMER_2._0.Models
     {
         public bool isValid;
         private AudioFileReader afr;
-        private String _path;
-        public String Path
-        {
-            get { return _path; }
-            set { _path = value; }
-        }
+        public String Path { get; set; }
         public System.Media.SoundPlayer player;
-        public bool isPlaying;
-        public int duration;
+        public bool isPlaying { get; set; }
+        public int duration { get; set; }
 
         public MusicInfo(String path) {
             isValid = false;
@@ -30,18 +25,26 @@ namespace EZWEBMER_2._0.Models
             player.Load();
             
             duration = (int)(afr.TotalTime.TotalSeconds);
+            isPlaying = false;
 
             isValid = true;
         }
 
-        public void Play() {
-
-            player.Play();
+        public void Play()
+        {
             isPlaying = true;
+            Task.Factory.StartNew(() =>
+            {
+                player.Play();
+            });
+            
         }
 
         public void Stop() {
-            player.Stop();
+            Task.Factory.StartNew(() =>
+            {
+                player.Stop();
+            });
             isPlaying = false;
         }
 
