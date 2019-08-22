@@ -21,6 +21,14 @@ namespace EZWEBMER_2._0.Viewmodels
                 OnPropertyChanged("Image_Path");
             }
         }
+        private Models.ImageInfo _imageInfo;
+        public Models.ImageInfo ImageInfo {
+            get { return _imageInfo; }
+            set {
+                _imageInfo = value;
+                OnPropertyChanged("ImageInfo");
+            }
+        }
 
         private String _audio_path;
         public String Audio_Path {
@@ -44,6 +52,7 @@ namespace EZWEBMER_2._0.Viewmodels
                 return new Models.DelegateCommand((obj) =>
                 {
                     Image_Path = Models.FileHandler.OpenFile("Image");
+                    ImageInfo = new Models.ImageInfo(Image_Path);
                 });
             }
         }

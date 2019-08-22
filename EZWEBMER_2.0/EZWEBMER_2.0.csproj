@@ -85,6 +85,7 @@
     <Compile Include="Models\DelegateCommand.cs" />
     <Compile Include="Models\FFMpegProcess.cs" />
     <Compile Include="Models\FileHandler.cs" />
+    <Compile Include="Models\ImageInfo.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Viewmodels\MainViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">

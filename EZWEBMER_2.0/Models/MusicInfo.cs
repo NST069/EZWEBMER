@@ -11,16 +11,18 @@ namespace EZWEBMER_2._0.Models
     class MusicInfo
     {
         private AudioFileReader afr;
+        public String Path;
         public System.Media.SoundPlayer player;
         public bool isPlaying;
         public int duration;
 
         public MusicInfo(String path) {
+            this.Path = path;
             afr = new AudioFileReader(path);
             player = new System.Media.SoundPlayer(path);
             player.Load();
             
-            duration = (int)(new AudioFileReader(path).TotalTime.TotalSeconds);
+            duration = (int)(afr.TotalTime.TotalSeconds);
         }
 
         public void Play() {
