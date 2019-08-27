@@ -13,11 +13,15 @@ namespace EZWEBMER_2._0.Models
         public static void Start(ImageInfo p, MusicInfo m, String s) {
             if (p!=null && m!=null)
             {
+                FileInfo fp = new FileInfo(p.Path);
+                FileInfo fv = new FileInfo(s);
                 String folder = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName + @"\ffmpeg\";
                 String cmdtext = "/k cd " + folder + " & " +
-                    "ffmpeg -loop 1 -r 1 " +
-                    "-i \"" + p.Path + "\" -i \"" + m.Path +
-                    "\" -t " + m.duration +
+                    "ffmpeg " +
+                    ((fp.Extension == ".gif") ? (" -ignore_loop 0 ") : ("-loop 1 -r 1 ")) +
+                    "-i \"" + p.Path + "\"" +
+                    " -i \"" + m.Path + "\"" +
+                    " -t " + m.duration +
                     " -b:v 0 -crf 2 -b:a 160K -shortest -g 9999 " +
                     "-pix_fmt yuv420p -speed 0 -deadline 0 -threads 4 " +
                     s;

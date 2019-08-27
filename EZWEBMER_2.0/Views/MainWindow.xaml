@@ -22,7 +22,8 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="400" Source="{Binding Path=ImageInfo.Path, Mode=TwoWay}"/>
+            <!--<Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="400" Source="{Binding Path=ImageInfo.Path, Mode=TwoWay}"/>-->
+            <MediaElement Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" LoadedBehavior="Play" Source="{Binding Path=ImageInfo.Path, Mode=TwoWay}" SpeedRatio="1" IsMuted="False"/>
             <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>

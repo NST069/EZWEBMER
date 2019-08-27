@@ -43,7 +43,7 @@ namespace EZWEBMER_2._0.Models
 
 
         public enum Formats {
-            png, jpg
+            png, jpg, gif
         }
     }
 }
