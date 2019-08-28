@@ -14,7 +14,15 @@ namespace EZWEBMER_2._0.Models
         private WaveOutEvent outputDevice;
         private AudioFileReader afr;
         public String Path { get; set; }
-        public bool isPlaying { get; set; }
+        public bool isPlaying
+        {
+            get
+            {
+                if (outputDevice!=null)
+                    return (outputDevice.PlaybackState == PlaybackState.Playing);
+                return false;
+            }
+        }
         public int duration { get; set; }
 
         public MusicInfo(String path) {
@@ -23,14 +31,12 @@ namespace EZWEBMER_2._0.Models
             afr = new AudioFileReader(path);
             
             duration = (int)(afr.TotalTime.TotalSeconds);
-            isPlaying = false;
 
             isValid = true;
         }
 
         public void Play()
         {
-            isPlaying = true;
             Task.Factory.StartNew(() =>
             {
                 if (outputDevice == null)
@@ -49,7 +55,6 @@ namespace EZWEBMER_2._0.Models
             {
                 outputDevice?.Stop();
             });
-            isPlaying = false;
         }
 
         private void OnPlaybackStopped(object sender, StoppedEventArgs args)
@@ -59,7 +64,7 @@ namespace EZWEBMER_2._0.Models
         }
 
         public enum Formats {
-            wav
+            wav, mp3
         }
     }
 }
