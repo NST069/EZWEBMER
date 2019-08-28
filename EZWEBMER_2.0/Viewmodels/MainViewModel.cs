@@ -54,8 +54,11 @@ namespace EZWEBMER_2._0.Viewmodels
                     String Image_Path = Models.FileHandler.OpenFile("Image");
                     if (Image_Path != "")
                     {
-                        ImageInfo = new Models.ImageInfo(Image_Path);
-                        ImageStr += "";
+                        Task.Factory.StartNew(() =>
+                        {
+                            ImageInfo = new Models.ImageInfo(Image_Path);
+                            ImageStr += "";
+                        });
                     }
                 });
             }
@@ -67,9 +70,12 @@ namespace EZWEBMER_2._0.Viewmodels
                     String Audio_Path = Models.FileHandler.OpenFile("Audio");
                     if (Audio_Path != "")
                     {
-                        MusicInfo = new Models.MusicInfo(Audio_Path);
-                        MusicStr += "";
-                        S_PlayPause += "";
+                        Task.Factory.StartNew(() =>
+                        {
+                            MusicInfo = new Models.MusicInfo(Audio_Path);
+                            MusicStr += "";
+                            S_PlayPause += "";
+                        });
                     }
                 });
             }
