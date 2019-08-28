@@ -11,9 +11,9 @@ namespace EZWEBMER_2._0.Models
     class MusicInfo
     {
         public bool isValid;
+        private WaveOutEvent outputDevice;
         private AudioFileReader afr;
         public String Path { get; set; }
-        public System.Media.SoundPlayer player;
         public bool isPlaying { get; set; }
         public int duration { get; set; }
 
@@ -21,8 +21,6 @@ namespace EZWEBMER_2._0.Models
             isValid = false;
             this.Path = path;
             afr = new AudioFileReader(path);
-            player = new System.Media.SoundPlayer(path);
-            player.Load();
             
             duration = (int)(afr.TotalTime.TotalSeconds);
             isPlaying = false;
@@ -35,7 +33,13 @@ namespace EZWEBMER_2._0.Models
             isPlaying = true;
             Task.Factory.StartNew(() =>
             {
-                player.Play();
+                if (outputDevice == null)
+                {
+                    outputDevice = new WaveOutEvent();
+                    outputDevice.PlaybackStopped += OnPlaybackStopped;
+                    outputDevice.Init(afr);
+                }
+                outputDevice.Play();
             });
             
         }
@@ -43,9 +47,15 @@ namespace EZWEBMER_2._0.Models
         public void Stop() {
             Task.Factory.StartNew(() =>
             {
-                player.Stop();
+                outputDevice?.Stop();
             });
             isPlaying = false;
+        }
+
+        private void OnPlaybackStopped(object sender, StoppedEventArgs args)
+        {
+            outputDevice.Dispose();
+            outputDevice = null;
         }
 
         public enum Formats {
