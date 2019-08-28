@@ -14,24 +14,47 @@ namespace EZWEBMER_2._0.Models
         private WaveOutEvent outputDevice;
         private AudioFileReader afr;
         public String Path { get; set; }
-        public bool isPlaying
+        public PlaybackState isPlaying
         {
             get
             {
-                if (outputDevice!=null)
-                    return (outputDevice.PlaybackState == PlaybackState.Playing);
-                return false;
+                if (outputDevice != null)
+                    return outputDevice.PlaybackState;
+                return PlaybackState.Stopped;
             }
         }
-        public int duration { get; set; }
+        public int duration
+        {
+            get
+            {
+                if (outputDevice != null)
+                    return (int)afr.TotalTime.TotalSeconds;
+                return 0;
+            }
+        }
+        public int position
+        {
+            get
+            {
+                if (outputDevice != null)
+                    return (int)afr.CurrentTime.TotalSeconds;
+                return 0;
+            }
+            set
+            {
+                if (outputDevice != null)
+                {
+                    afr.CurrentTime = TimeSpan.FromSeconds(value);
+                }
+
+            }
+        }
 
         public MusicInfo(String path) {
             isValid = false;
             this.Path = path;
             afr = new AudioFileReader(path);
             
-            duration = (int)(afr.TotalTime.TotalSeconds);
-
             isValid = true;
         }
 
@@ -45,16 +68,23 @@ namespace EZWEBMER_2._0.Models
                     outputDevice.PlaybackStopped += OnPlaybackStopped;
                     outputDevice.Init(afr);
                 }
-                outputDevice.Play();
+                if (outputDevice.PlaybackState != PlaybackState.Playing)
+                {
+                    if (outputDevice.PlaybackState == PlaybackState.Stopped)
+                    {
+                        outputDevice.Init(afr);
+                    }
+                    outputDevice.Play();
+                }
             });
             
         }
 
-        public void Stop() {
-            Task.Factory.StartNew(() =>
-            {
-                outputDevice?.Stop();
-            });
+        public void Stop(){
+            outputDevice?.Stop();
+        }
+        public void Pause() {
+            outputDevice?.Pause();
         }
 
         private void OnPlaybackStopped(object sender, StoppedEventArgs args)

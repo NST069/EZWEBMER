@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EZWEBMER_2._0"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:viewmodels="clr-namespace:EZWEBMER_2._0.Viewmodels"
         mc:Ignorable="d"
         Title="EZWEBMER v2.0.1" Height="500" Width="400">
@@ -29,8 +30,16 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Content="{Binding S_PlayPause}" Command="{Binding PlayPause}"/>
-                <Slider Grid.Column="1" Minimum="0" Maximum="{Binding MusicInfo.duration}" LargeChange="60" SmallChange="10"/>
-                <!-- Value="{Binding }"/> -->
+                <Slider Grid.Column="1" Minimum="0" Maximum="{Binding aud_duration}" LargeChange="60" SmallChange="10" Value="{Binding aud_position}" TickPlacement="TopLeft" >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseDown" >
+                            <i:InvokeCommandAction Command="{Binding Slider_Down}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="PreviewMouseUp" >
+                            <i:InvokeCommandAction Command="{Binding Slider_Up}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Slider>
             </Grid>
             <StackPanel Grid.Row="2" Grid.Column="0">
                 <Button Content="Open Image" Command="{Binding OpenImage}"/>
