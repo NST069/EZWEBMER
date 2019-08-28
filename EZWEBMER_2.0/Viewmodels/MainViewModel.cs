@@ -33,7 +33,7 @@ namespace EZWEBMER_2._0.Viewmodels
         public String ImageStr {
             get {
                 if (ImageInfo != null)
-                    return "["+(ImageInfo.isValid?"Valid":"Invalid")+"]"+ImageInfo.Path+" "+ImageInfo.Width+"x"+ImageInfo.Height; 
+                    return "["+(ImageInfo.isValid?"Valid":"Invalid")+"]"+ImageInfo.Path+" "+ImageInfo.Width+"x"+ImageInfo.Height +((ImageInfo.gif!=null)?" Frames: "+ImageInfo.gif.framesCount:""); 
                 return "Picture Not Selected";
             }
             set { OnPropertyChanged("ImageStr"); }
