@@ -12,6 +12,7 @@ namespace EZWEBMER_2._0.Models
         public bool isValid;
         public String Path { get; set; }
         private BitmapImage image;
+        public GifHandler gif;
         public int Height;
         public int Width;
 
@@ -25,6 +26,7 @@ namespace EZWEBMER_2._0.Models
         {
             this.Path = path;
             image = new BitmapImage(new Uri(path));
+            if (GifHandler.isGif(path)) gif = new GifHandler(path);
             Height = image.PixelHeight;
             Width = image.PixelWidth;
 
@@ -59,7 +61,7 @@ namespace EZWEBMER_2._0.Models
 
 
         public enum Formats {
-            png, jpg
+            png, jpg, gif
         }
     }
 }
