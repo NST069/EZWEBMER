@@ -2,3 +2,32 @@ webm:
 	static pic+music
 		ffmpeg -loop 1 -r 1 -i [pic] -i [mus] -b:v 0 -crf 2 -b:a 160K -shortest -g 9999 -pix_fmt yuv420p -speed 0 -deadline 0 -threads 4 [out].webm
 		
+		
+tips:
+	get video info
+		ffmpeg -i [video]
+		ffprobe [video]
+		ffprobe -v 0 [video] -print_format {xml|json|ini} -show_format
+	image sequence to video
+		ffmpeg -r [framerate] -y -i "image_%%03d.png" (( -t [duration] -i [audio] ))[output]  //%010d
+	video to image sequence
+		ffmpeg -i [video] image%d.png
+	get audio from video
+		ffmpeg -i [video] -vn -ar 44100 -ac 2 -ab 320 -f mp3 [output].mp3
+	wav to mp3
+		ffmpeg -i [wav] -vn -ar 44100 -ac 2 -ab 320 -f mp3 [mp3]
+	avi to gif
+		ffmpeg -i [avi] [gif]
+	add audio to video
+		ffmpeg -i [audio] -i [video] [output]
+	replace audio in video
+		ffmpeg -i [video] -i [audio] -c:v copy -map 0:v:0 1:a:0 ((-shortest /* crop audio if longer*/)) [output] //map [input stream id]:{a/v}:[output stream]
+	get frame from video	
+		ffmpeg -ss 00:00:02 -i [video] -f image2 -vframes 1 [output]
+	merge videos
+		same format:
+		ffmpeg -i "concat:[video1]|[video2]..." -c copy [output]
+		else:
+		ffmpeg -i [video1] -i [video2] -filter_complex '[0:0] [0:1] [1:0] [1:1] concat=n=2:v=1:a=1 [v] [a]' -map '[v]' -map '[a]' [output]
+	video capture
+		ffmpeg -f x11grab -s [resolution] -r 25 -i:0.0+10,20 [output] //0.0 - screen, 10,20 - offset from top left

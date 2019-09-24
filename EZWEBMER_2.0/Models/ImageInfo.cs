@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace EZWEBMER_2._0.Models
 {
-    class ImageInfo
+    class ImageInfo : MediaInfo
     {
         public bool isValid;
         public String Path { get; set; }
@@ -17,6 +17,12 @@ namespace EZWEBMER_2._0.Models
 
         public ImageInfo(String path) {
             isValid = false;
+            Load(path);
+            isValid = true;
+        }
+
+        public override void Load(string path)
+        {
             this.Path = path;
             image = new BitmapImage(new Uri(path));
             Height = image.PixelHeight;
@@ -28,12 +34,22 @@ namespace EZWEBMER_2._0.Models
                 //AddPixel(true);
                 return;
             }
-            if (Width % 2 != 0) {
+            if (Width % 2 != 0)
+            {
                 System.Windows.MessageBox.Show("Wrong Width. Must be even");
                 //AddPixel(false);
                 return;
             }
-            isValid = true;
+        }
+
+        public override void Play()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override String Information()
+        {
+            return "[" + (isValid ? "Valid" : "Invalid") + "]" + Path + " " + Width + "x" + Height;
         }
 
         private void AddPixel(bool horizontal) {

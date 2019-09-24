@@ -92,6 +92,7 @@
     <Compile Include="Models\FFMpegProcess.cs" />
     <Compile Include="Models\FileHandler.cs" />
     <Compile Include="Models\ImageInfo.cs" />
+    <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Viewmodels\MainViewModel.cs" />

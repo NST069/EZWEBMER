@@ -75,15 +75,15 @@ namespace EZWEBMER_2._0.Viewmodels
         public String ImageStr {
             get {
                 if (ImageInfo != null)
-                    return "["+(ImageInfo.isValid?"Valid":"Invalid")+"]"+ImageInfo.Path+" "+ImageInfo.Width+"x"+ImageInfo.Height; 
+                    return ImageInfo.Information();
                 return "Picture Not Selected";
             }
             set { OnPropertyChanged(nameof(ImageStr)); }
         }
         public String MusicStr {
             get {
-                if (MusicInfo != null)
-                    return "[" + (MusicInfo.isValid ? "Valid" : "Invalid") + "]" + MusicInfo.Path + " " + (MusicInfo.isPlaying.ToString());
+                if(MusicInfo!=null)
+                    return MusicInfo.Information();
                 return "Music Not Selected";
             }
             set { OnPropertyChanged(nameof(MusicStr)); }

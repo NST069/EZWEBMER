@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EZWEBMER_2._0.Models
 {
-    class MusicInfo
+    class MusicInfo : MediaInfo
     {
         public bool isValid;
         private WaveOutEvent outputDevice;
@@ -52,13 +52,16 @@ namespace EZWEBMER_2._0.Models
 
         public MusicInfo(String path) {
             isValid = false;
-            this.Path = path;
-            afr = new AudioFileReader(path);
-            
+            Load(path);            
             isValid = true;
         }
 
-        public void Play()
+        public override void Load(String path) {
+            this.Path = path;
+            afr = new AudioFileReader(path);
+
+        }
+        public override void Play()
         {
             Task.Factory.StartNew(() =>
             {
@@ -78,6 +81,10 @@ namespace EZWEBMER_2._0.Models
                 }
             });
             
+        }
+
+        public override String Information() {
+            return "[" + (isValid ? "Valid" : "Invalid") + "]" + Path + " " + (isPlaying.ToString());
         }
 
         public void Stop(){
