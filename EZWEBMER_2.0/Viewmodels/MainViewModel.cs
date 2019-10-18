@@ -37,6 +37,15 @@ namespace EZWEBMER_2._0.Viewmodels
             UpdateSeekBar();
         }
 
+        private List<Models.MediaInfo> _mediaInfos = new List<Models.MediaInfo>();//fix it plz
+        public List<Models.MediaInfo> MediaInfos {
+            get { return _mediaInfos; }
+            set {
+                _mediaInfos = value;
+                OnPropertyChanged(nameof(MediaInfos));
+            }
+        }
+        
         private Models.ImageInfo _imageInfo;
         public Models.ImageInfo ImageInfo {
             get { return _imageInfo; }
@@ -87,6 +96,44 @@ namespace EZWEBMER_2._0.Viewmodels
                 return "Music Not Selected";
             }
             set { OnPropertyChanged(nameof(MusicStr)); }
+        }
+
+        public ICommand OpenFile {
+            get {
+                return new Models.DelegateCommand((obj) =>
+                {
+                    String Path = Models.FileHandler.OpenFile();
+                    if (Path == "") return;
+                    if(Enum.IsDefined(typeof(Models.MusicInfo.Formats), new FileInfo(Path).Extension.Substring(1)))
+                        MediaInfos.Add(new Models.MusicInfo(Path));
+                    else if(Enum.IsDefined(typeof(Models.ImageInfo.Formats), new FileInfo(Path).Extension.Substring(1)))
+                        MediaInfos.Add(new Models.ImageInfo(Path));
+
+                    UpdateMedias(); //TODO: Remove it in the future
+                });
+            }
+        }
+
+        void UpdateMedias() {
+            foreach (var x in MediaInfos) {
+                if (x.GetType() == typeof(Models.MusicInfo))
+                {
+                    MusicInfo = (Models.MusicInfo)x;
+                    
+                    aud_duration = MusicInfo.duration;
+                    aud_position = MusicInfo.position;
+                    MusicStr += "";
+                    S_PlayPause += "";
+                    timer.Interval = 300;
+                    timer.Elapsed += Timer_Elapsed;
+                    timer.Start();
+                }
+                else if (x.GetType() == typeof(Models.ImageInfo))
+                {
+                    ImageInfo = (Models.ImageInfo)x;
+                    ImageStr += "";
+                }
+            }
         }
 
         public ICommand OpenImage {

@@ -17,7 +17,7 @@ namespace EZWEBMER_2._0.Models
                     String sa = "";
                     foreach (MusicInfo.Formats x in Enum.GetValues(typeof(MusicInfo.Formats)))
                         sa += "*." + x + ";";
-                    ofd.Filter = "Audio Files|" + sa; //TODO: Make MP3-friendly
+                    ofd.Filter = "Audio Files|" + sa;
                     break;
                 case "Image":
                     String si = "";
@@ -26,6 +26,12 @@ namespace EZWEBMER_2._0.Models
                     ofd.Filter = "Images|" + si;
                     break;
                 default:
+                    String su = "";
+                    foreach (MusicInfo.Formats x in Enum.GetValues(typeof(MusicInfo.Formats)))
+                        su += "*." + x + ";";
+                    foreach (ImageInfo.Formats x in Enum.GetValues(typeof(ImageInfo.Formats)))
+                        su += "*." + x + ";";
+                    ofd.Filter = "All|" + su;
                     break;
             }
             if (ofd.ShowDialog() == true) return ofd.FileName;

@@ -22,6 +22,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <!--<Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="400" Source="{Binding Path=ImageInfo.Path, Mode=TwoWay}"/>-->
             <MediaElement Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" LoadedBehavior="Play" Source="{Binding Path=ImageInfo.Path, Mode=TwoWay}" SpeedRatio="1" IsMuted="False"/>
@@ -42,15 +43,16 @@
                     </i:Interaction.Triggers>
                 </Slider>
             </Grid>
-            <StackPanel Grid.Row="2" Grid.Column="0">
-                <Button Content="Open Image" Command="{Binding OpenImage}"/>
+            <Button Grid.Row="2" Content="Open" Command="{Binding OpenFile}" Grid.ColumnSpan="2"/>
+            <StackPanel Grid.Row="3" Grid.Column="0">
+                <!--<Button Content="Open Image" Command="{Binding OpenImage}"/>-->
                 <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding ImageStr}"/>
             </StackPanel>
-            <StackPanel Grid.Row="2" Grid.Column="1">
-                <Button Content="Open Audio" Command="{Binding OpenAudio}"/>
+            <StackPanel Grid.Row="3" Grid.Column="1">
+                <!--<Button Content="Open Audio" Command="{Binding OpenAudio}"/>-->
                 <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding MusicStr}"/>
             </StackPanel>
-            <Button Grid.Row="3" Content="Submit" Grid.ColumnSpan="2" Command="{Binding Render}"/>
+            <Button Grid.Row="4" Content="Submit" Grid.ColumnSpan="2" Command="{Binding Render}"/>
         </Grid>
     </Grid>
 </Window>
