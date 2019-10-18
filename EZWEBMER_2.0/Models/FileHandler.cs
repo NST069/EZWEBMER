@@ -31,6 +31,8 @@ namespace EZWEBMER_2._0.Models
                         su += "*." + x + ";";
                     foreach (ImageInfo.Formats x in Enum.GetValues(typeof(ImageInfo.Formats)))
                         su += "*." + x + ";";
+                    foreach (VideoInfo.Formats x in Enum.GetValues(typeof(VideoInfo.Formats)))
+                        su += "*." + x + ";";
                     ofd.Filter = "All|" + su;
                     break;
             }

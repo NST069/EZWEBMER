@@ -54,6 +54,16 @@ namespace EZWEBMER_2._0.Viewmodels
                 OnPropertyChanged(nameof(ImageInfo));
             }
         }
+        private Models.MediaInfo _visualInfo;
+        public Models.MediaInfo VisualInfo
+        {
+            get { return _visualInfo; }
+            set
+            {
+                _visualInfo = value;
+                OnPropertyChanged(nameof(VisualInfo));
+            }
+        }
         private Models.MusicInfo _musicinfo;
         public Models.MusicInfo MusicInfo {
             get { return _musicinfo; }
@@ -108,6 +118,8 @@ namespace EZWEBMER_2._0.Viewmodels
                         MediaInfos.Add(new Models.MusicInfo(Path));
                     else if(Enum.IsDefined(typeof(Models.ImageInfo.Formats), new FileInfo(Path).Extension.Substring(1)))
                         MediaInfos.Add(new Models.ImageInfo(Path));
+                    else if (Enum.IsDefined(typeof(Models.VideoInfo.Formats), new FileInfo(Path).Extension.Substring(1)))
+                        MediaInfos.Add(new Models.VideoInfo(Path));
 
                     UpdateMedias(); //TODO: Remove it in the future
                 });
@@ -119,7 +131,7 @@ namespace EZWEBMER_2._0.Viewmodels
                 if (x.GetType() == typeof(Models.MusicInfo))
                 {
                     MusicInfo = (Models.MusicInfo)x;
-                    
+
                     aud_duration = MusicInfo.duration;
                     aud_position = MusicInfo.position;
                     MusicStr += "";
@@ -131,7 +143,11 @@ namespace EZWEBMER_2._0.Viewmodels
                 else if (x.GetType() == typeof(Models.ImageInfo))
                 {
                     ImageInfo = (Models.ImageInfo)x;
+                    VisualInfo = (Models.ImageInfo)x;
                     ImageStr += "";
+                }
+                else if (x.GetType() == typeof(Models.VideoInfo)) {
+                    VisualInfo = (Models.VideoInfo)x;
                 }
             }
         }

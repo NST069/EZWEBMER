@@ -22,7 +22,7 @@ namespace EZWEBMER_2._0.Models
             isValid = true;
         }
 
-        public override void Load(string path)
+        public void Load(string path)
         {
             this.Path = path;
             image = new BitmapImage(new Uri(path));
@@ -44,12 +44,12 @@ namespace EZWEBMER_2._0.Models
             }
         }
 
-        public override void Play()
+        public void Play()
         {
             throw new NotImplementedException();
         }
 
-        public override String Information()
+        public String Information()
         {
             return "[" + (isValid ? "Valid" : "Invalid") + "]" + Path + " " + Width + "x" + Height;
         }

@@ -13,12 +13,17 @@ namespace EZWEBMER_2._0.Models
             Load(path);
         }
 
-        public override void Load(string path)
+        public string Information()
         {
             throw new NotImplementedException();
         }
 
-        public override void Play()
+        public void Load(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Play()
         {
             throw new NotImplementedException();
         }

@@ -56,12 +56,12 @@ namespace EZWEBMER_2._0.Models
             isValid = true;
         }
 
-        public override void Load(String path) {
+        public void Load(String path) {
             this.Path = path;
             afr = new AudioFileReader(path);
 
         }
-        public override void Play()
+        public void Play()
         {
             Task.Factory.StartNew(() =>
             {
@@ -83,7 +83,7 @@ namespace EZWEBMER_2._0.Models
             
         }
 
-        public override String Information() {
+        public String Information() {
             return "[" + (isValid ? "Valid" : "Invalid") + "]" + Path + " " + (isPlaying.ToString());
         }
 
