@@ -25,6 +25,12 @@ namespace EZWEBMER_2._0.Models
                         si += "*." + x + ";";
                     ofd.Filter = "Images|" + si;
                     break;
+                case "Video":
+                    String sv = "";
+                    foreach (VideoInfo.Formats x in Enum.GetValues(typeof(VideoInfo.Formats)))
+                        sv += "*." + x + ";";
+                    ofd.Filter = "Videos|" + sv;
+                    break;
                 default:
                     break;
             }

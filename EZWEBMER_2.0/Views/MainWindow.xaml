@@ -7,50 +7,31 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:viewmodels="clr-namespace:EZWEBMER_2._0.Viewmodels"
         mc:Ignorable="d"
-        Title="EZWEBMER v2.0.1" Height="500" Width="400">
+        Title="EZWEBMER v2.0.2" Height="200" Width="800">
     <Window.DataContext>
         <viewmodels:MainViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <!--<Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="400" Source="{Binding Path=ImageInfo.Path, Mode=TwoWay}"/>-->
-            <MediaElement Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" LoadedBehavior="Play" Source="{Binding Path=ImageInfo.Path, Mode=TwoWay}" SpeedRatio="1" IsMuted="False"/>
-            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="{Binding S_PlayPause}" Command="{Binding PlayPause}"/>
-                <Slider Grid.Column="1" Minimum="0" Maximum="{Binding aud_duration}" LargeChange="60" SmallChange="10" Value="{Binding aud_position}" TickPlacement="TopLeft" >
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseDown" >
-                            <i:InvokeCommandAction Command="{Binding Slider_Down}" />
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="PreviewMouseUp" >
-                            <i:InvokeCommandAction Command="{Binding Slider_Up}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Slider>
+                <ComboBox Grid.Column="0" IsEnabled="False" ItemsSource="{Binding}"/>
+                <Button Grid.Column="1" Content="{Binding ImageInfo.Path}" Command="{Binding OpenImage}"/>
+                <Button Grid.Column="2" Content="{Binding MusicInfo.Path}" Command="{Binding OpenAudio}"/>
+                <Button Grid.Column="3" Content="{Binding VidPath}" Command="{Binding OpenVideo}" IsEnabled="False"/>
+                <TextBox Grid.Column="4" Text="{Binding OutputName}"/>
+                <Button Grid.Column="5" Content="Render" Command="{Binding Render}"/>
             </Grid>
-            <StackPanel Grid.Row="2" Grid.Column="0">
-                <Button Content="Open Image" Command="{Binding OpenImage}"/>
-                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding ImageStr}"/>
-            </StackPanel>
-            <StackPanel Grid.Row="2" Grid.Column="1">
-                <Button Content="Open Audio" Command="{Binding OpenAudio}"/>
-                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding MusicStr}"/>
-            </StackPanel>
-            <Button Grid.Row="3" Content="Submit" Grid.ColumnSpan="2" Command="{Binding Render}"/>
         </Grid>
     </Grid>
 </Window>

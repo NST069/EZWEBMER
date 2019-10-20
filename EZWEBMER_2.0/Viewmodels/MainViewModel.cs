@@ -89,6 +89,24 @@ namespace EZWEBMER_2._0.Viewmodels
             set { OnPropertyChanged(nameof(MusicStr)); }
         }
 
+        String _vidpath;
+        public String VidPath {
+            get { return _vidpath; }
+            set {
+                _vidpath = value;
+                OnPropertyChanged(nameof(VidPath));
+            }
+        }
+
+        String _outputname;
+        public String OutputName {
+            get { return _outputname; }
+            set {
+                _outputname = value;
+                OnPropertyChanged(nameof(OutputName));
+            }
+        }
+
         public ICommand OpenImage {
             get {
                 return new Models.DelegateCommand((obj) =>
@@ -122,6 +140,18 @@ namespace EZWEBMER_2._0.Viewmodels
                 });
             }
         }
+
+        public ICommand OpenVideo
+        {
+            get
+            {
+                return new Models.DelegateCommand((obj) =>
+                {
+                    VidPath = Models.FileHandler.OpenFile("Video");
+                });
+            }
+        }
+
         public String S_PlayPause {
             get {
                 if (MusicInfo != null && MusicInfo.isPlaying==NAudio.Wave.PlaybackState.Playing) return "Stop";
@@ -158,10 +188,9 @@ namespace EZWEBMER_2._0.Viewmodels
                     
                     if (ImageInfo!=null && MusicInfo!=null)
                     {
-                        String saveFile = Models.FileHandler.SaveFile();
-                        if (saveFile != "")
+                        if (OutputName != "")
                         {
-                            Models.FFMpegProcess.StaticImgAndMusicVid(ImageInfo.Path, MusicInfo.Path, saveFile, MusicInfo.duration);
+                            Models.FFMpegProcess.StaticImgAndMusicVid(ImageInfo.Path, MusicInfo.Path, OutputName, MusicInfo.duration);
                         }
                     }
                 }, (obj)=> {
