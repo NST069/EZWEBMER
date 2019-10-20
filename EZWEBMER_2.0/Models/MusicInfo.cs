@@ -23,15 +23,8 @@ namespace EZWEBMER_2._0.Models
                 return PlaybackState.Stopped;
             }
         }
-        public int duration
-        {
-            get
-            {
-                if (outputDevice != null)
-                    return (int)afr.TotalTime.TotalSeconds;
-                return 0;
-            }
-        }
+
+        public int duration { get; set; }
         public int position
         {
             get
@@ -59,6 +52,7 @@ namespace EZWEBMER_2._0.Models
         public override void Load(String path) {
             this.Path = path;
             afr = new AudioFileReader(path);
+            duration = (int)afr.TotalTime.TotalSeconds;
 
         }
         public override void Play()

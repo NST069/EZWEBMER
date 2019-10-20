@@ -161,7 +161,7 @@ namespace EZWEBMER_2._0.Viewmodels
                         String saveFile = Models.FileHandler.SaveFile();
                         if (saveFile != "")
                         {
-                            Models.FFMpegProcess.Start(ImageInfo, MusicInfo, saveFile);
+                            Models.FFMpegProcess.StaticImgAndMusicVid(ImageInfo.Path, MusicInfo.Path, saveFile, MusicInfo.duration);
                         }
                     }
                 }, (obj)=> {
