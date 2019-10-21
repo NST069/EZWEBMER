@@ -20,11 +20,11 @@ namespace EZWEBMER_2._0.Models
                 return fi.FullName;
             }
         }
-        public static void StaticImgAndMusicVid(String p, String m, String sss, int duration) {
-            
+        public static void StaticImgAndMusicVid(String p, String m, String s, int duration, String format = ".webm") {
+
             FileInfo fp = new FileInfo(p);
             FileInfo fm = new FileInfo(m);
-            String output = initialFolder + Path.GetFileName(sss);
+            String output = initialFolder + s + format;
 
             String cmdtext = ((fp.Extension == ".gif") ? (" -ignore_loop 0 ") : ("-loop 1 -r 1 ")) +
                 "-i \"" + p + "\"" +
@@ -42,14 +42,17 @@ namespace EZWEBMER_2._0.Models
             }
 
             ExecuteProcess(cmdtext);
-            
+
         }
 
-        public static void AudioFromVideo(String input) {
+        public static void AudioFromVideo(String input, String format = ".mp3") {
             FileInfo fv = new FileInfo(input);
-            String output = initialFolder + Path.GetFileNameWithoutExtension(input);
-            String cmdtext = "-i \"" + input + "\" -vn -ar 44100 -ac 2 -ab 320 -f mp3 \"" 
-                + output + "\"";
+            String output = initialFolder + Path.GetFileNameWithoutExtension(input) + format;
+            String cmdtext = "-i \"" + input + "\" -ar 44100 -ac 2";
+            if (format == ".mp3") cmdtext += " -vn -acodec mp3 -ab 320 ";
+            else if (format == ".wav") cmdtext += " -vn -acodec pcm_s16le ";
+            else if (format == ".flac") cmdtext += "-acodec flac -bits_per_raw_sample 16";
+            cmdtext += " -f " + format.Substring(1) + " \"" + output + "\"";
 
             if (File.Exists(output))
             {
@@ -76,9 +79,9 @@ namespace EZWEBMER_2._0.Models
             ExecuteProcess(cmdtext);
         }
 
-        public static void GetFrame(String input, int hh, int mm, int ss) {
+        public static void GetFrame(String input, int hh, int mm, int ss, String format=".png") {
             FileInfo fv = new FileInfo(input);
-            String output = initialFolder + Path.GetFileNameWithoutExtension(input)+"snapAt"+hh+":"+mm+":"+ss + ".png";
+            String output = initialFolder + Path.GetFileNameWithoutExtension(input)+"snapAt"+hh+":"+mm+":"+ss + format;
             String cmdtext = "-ss " + hh + ":" + mm + ":" + ss + " -i \"" + input + "\" -f image2 -vframes 1 \""
                 + output + "\"";
 
@@ -90,6 +93,16 @@ namespace EZWEBMER_2._0.Models
             }
 
             ExecuteProcess(cmdtext);
+        }
+
+        public static List<String> GetFunctions() {
+            List<String> l = new List<String>();
+
+            l.Add("Img+Music=Video");
+            l.Add("Video->Music");
+            l.Add("Video->Gif");
+
+            return l;
         }
 
         static void ExecuteProcess(String cmd) {

@@ -18,19 +18,21 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox Grid.Column="0" IsEnabled="False" ItemsSource="{Binding}"/>
+                <ComboBox Grid.Column="0" ItemsSource="{Binding AvailableFunctions}" SelectedItem="{Binding SelectedFunc}" IsSynchronizedWithCurrentItem="True"/>
                 <Button Grid.Column="1" Content="{Binding ImageInfo.Path}" Command="{Binding OpenImage}"/>
                 <Button Grid.Column="2" Content="{Binding MusicInfo.Path}" Command="{Binding OpenAudio}"/>
-                <Button Grid.Column="3" Content="{Binding VidPath}" Command="{Binding OpenVideo}" IsEnabled="False"/>
+                <Button Grid.Column="3" Content="{Binding VidPath}" Command="{Binding OpenVideo}"/>
                 <TextBox Grid.Column="4" Text="{Binding OutputName}"/>
-                <Button Grid.Column="5" Content="Render" Command="{Binding Render}"/>
+                <ComboBox Grid.Column="5" ItemsSource="{Binding AvailableFormats}" SelectedItem="{Binding SelectedFormat}" IsSynchronizedWithCurrentItem="True"/>
+                <Button Grid.Column="6" Content="Render" Command="{Binding Render}"/>
             </Grid>
         </Grid>
     </Grid>

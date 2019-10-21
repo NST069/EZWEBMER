@@ -95,7 +95,7 @@ namespace EZWEBMER_2._0.Models
         }
 
         public enum Formats {
-            wav, mp3
+            wav, mp3, flac
         }
     }
 }

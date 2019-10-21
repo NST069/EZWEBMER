@@ -13,7 +13,7 @@ namespace EZWEBMER_2._0.Viewmodels
 {
     class MainViewModel : INotifyPropertyChanged
     {
-        
+        /*
         System.Timers.Timer timer = new System.Timers.Timer();
         private void UpdateSeekBar()
         {
@@ -36,7 +36,7 @@ namespace EZWEBMER_2._0.Viewmodels
         {
             UpdateSeekBar();
         }
-
+        */
         private Models.ImageInfo _imageInfo;
         public Models.ImageInfo ImageInfo {
             get { return _imageInfo; }
@@ -53,7 +53,16 @@ namespace EZWEBMER_2._0.Viewmodels
                 OnPropertyChanged(nameof(MusicInfo));
             }
         }
+        private Models.VideoInfo _videoinfo;
+        public Models.VideoInfo VideoInfo {
+            get { return _videoinfo; }
+            set {
+                _videoinfo = value;
+                OnPropertyChanged(nameof(VideoInfo));
+            }
+        }
 
+        /*
         private int _dur;
         public int aud_duration {
             get { return _dur; }
@@ -88,15 +97,7 @@ namespace EZWEBMER_2._0.Viewmodels
             }
             set { OnPropertyChanged(nameof(MusicStr)); }
         }
-
-        String _vidpath;
-        public String VidPath {
-            get { return _vidpath; }
-            set {
-                _vidpath = value;
-                OnPropertyChanged(nameof(VidPath));
-            }
-        }
+        */
 
         String _outputname;
         public String OutputName {
@@ -107,28 +108,82 @@ namespace EZWEBMER_2._0.Viewmodels
             }
         }
 
-        public ICommand OpenImage {
+        List<String> _avformats;
+        public List<String> AvailableFormats {
+            get { return _avformats; }
+            set {
+                _avformats = value;
+                OnPropertyChanged(nameof(AvailableFormats));
+            }
+        }
+        String _selectedfmt;
+        public String SelectedFormat {
+            get { return _selectedfmt; }
+            set {
+                _selectedfmt = value;
+                OnPropertyChanged(nameof(SelectedFormat));
+            }
+        }
+
+        public List<String> AvailableFunctions {
             get {
+                return Models.FFMpegProcess.GetFunctions();
+            }
+        }
+
+        String _selectedfunc;
+        public String SelectedFunc {
+            get { return _selectedfunc; }
+            set {
+                List<String> avf = new List<String>();
+                switch (value)
+                {
+                    case "Img+Music=Video":
+                        foreach (Models.VideoInfo.Formats x in Enum.GetValues(typeof(Models.VideoInfo.Formats)))
+                            avf.Add("." + x);
+                        break;
+                    case "Video->Music":
+                        foreach (Models.MusicInfo.Formats x in Enum.GetValues(typeof(Models.MusicInfo.Formats)))
+                            avf.Add("." + x);
+                        break;
+                    case "Video->Gif":
+                        avf.Add(".gif");
+                        break;
+                }
+                AvailableFormats = avf;
+                _selectedfunc = value;
+                OnPropertyChanged(nameof(SelectedFunc));
+            }
+        }
+ 
+        public ICommand OpenImage
+        {
+            get
+            {
                 return new Models.DelegateCommand((obj) =>
                 {
                     String Image_Path = Models.FileHandler.OpenFile("Image");
                     if (Image_Path != "")
                     {
                         ImageInfo = new Models.ImageInfo(Image_Path);
-                        ImageStr += "";
+                        //ImageStr += "";
                     }
-                });
+
+                }, (obj) => { return (SelectedFunc == "Img+Music=Video"); });
             }
         }
-        public ICommand OpenAudio {
-            get {
+        public ICommand OpenAudio
+        {
+            get
+            {
                 return new Models.DelegateCommand((obj) =>
                 {
                     String Audio_Path = Models.FileHandler.OpenFile("Audio");
                     if (Audio_Path != "")
                     {
-                        timer.Stop();
+                        //timer.Stop();
                         MusicInfo = new Models.MusicInfo(Audio_Path);
+                        /*
                         aud_duration = MusicInfo.duration;
                         aud_position = MusicInfo.position;
                         MusicStr += "";
@@ -136,7 +191,11 @@ namespace EZWEBMER_2._0.Viewmodels
                         timer.Interval = 300;
                         timer.Elapsed += Timer_Elapsed;
                         timer.Start();
+                        */
                     }
+                }, (obj) =>
+                {
+                    return (SelectedFunc == "Img+Music=Video");
                 });
             }
         }
@@ -147,11 +206,17 @@ namespace EZWEBMER_2._0.Viewmodels
             {
                 return new Models.DelegateCommand((obj) =>
                 {
-                    VidPath = Models.FileHandler.OpenFile("Video");
+                    String VideoPath = Models.FileHandler.OpenFile("Video");
+                    if (VideoPath != "") {
+                        VideoInfo = new Models.VideoInfo(VideoPath);
+                    }
+                }, (obj) =>
+                {
+                    return (SelectedFunc == "Video->Music" || SelectedFunc == "Video->Gif");
                 });
             }
         }
-
+        /*
         public String S_PlayPause {
             get {
                 if (MusicInfo != null && MusicInfo.isPlaying==NAudio.Wave.PlaybackState.Playing) return "Stop";
@@ -180,26 +245,39 @@ namespace EZWEBMER_2._0.Viewmodels
                     return false;
                 });
             }
-        }
-        public ICommand Render{
+        }*/
+
+        public ICommand Render {
             get {
                 return new Models.DelegateCommand((obj) =>
                 {
-                    
-                    if (ImageInfo!=null && MusicInfo!=null)
+
+                    switch (SelectedFunc)
                     {
-                        if (OutputName != "")
-                        {
-                            Models.FFMpegProcess.StaticImgAndMusicVid(ImageInfo.Path, MusicInfo.Path, OutputName, MusicInfo.duration);
-                        }
+                        case "Img+Music=Video":
+                            Models.FFMpegProcess.StaticImgAndMusicVid(ImageInfo.Path, MusicInfo.Path, OutputName, MusicInfo.duration, SelectedFormat);
+                            break;
+                        case "Video->Music":
+                            Models.FFMpegProcess.AudioFromVideo(VideoInfo.Path, SelectedFormat);
+                            break;
+                        case "Video->Gif":
+                            Models.FFMpegProcess.VideoToGif(VideoInfo.Path);
+                            break;
                     }
+
+
                 }, (obj)=> {
-                    if (MusicInfo != null && ImageInfo != null)
-                        return MusicInfo.isValid && ImageInfo.isValid;
+                    if (SelectedFunc == "Img+Music=Video")
+                    {
+                        if (MusicInfo != null && ImageInfo != null)
+                            return MusicInfo.isValid && ImageInfo.isValid;
+                    }
+                    else if (VideoInfo!=null) return true;
                     return false;
                 });
             }
         }
+        /*
         public ICommand Slider_Down
         {
             get
@@ -221,6 +299,7 @@ namespace EZWEBMER_2._0.Viewmodels
                 }, (obj)=> { return (MusicInfo.isPlaying==NAudio.Wave.PlaybackState.Paused); });
             }
         }
+        */
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName]String info = "")

@@ -8,14 +8,14 @@ namespace EZWEBMER_2._0.Models
 {
     class VideoInfo : MediaInfo
     {
-
+        public String Path { get; set; }
         public VideoInfo(String path) {
             Load(path);
         }
 
         public override void Load(string path)
         {
-            throw new NotImplementedException();
+            this.Path = path;
         }
 
         public override void Play()
