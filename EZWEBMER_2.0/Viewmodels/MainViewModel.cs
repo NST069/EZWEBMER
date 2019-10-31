@@ -108,6 +108,38 @@ namespace EZWEBMER_2._0.Viewmodels
             }
         }
 
+        int _hh;
+        public int hh
+        {
+            get { return _hh; }
+            set
+            {
+                _hh = value;
+                OnPropertyChanged(nameof(hh));
+            }
+        }
+        int _mm;
+        public int mm
+        {
+            get { return _mm; }
+            set
+            {
+                _mm = value;
+                OnPropertyChanged(nameof(mm));
+            }
+        }
+        int _ss;
+        public int ss
+        {
+            get { return _ss; }
+            set
+            {
+                _ss = value;
+                OnPropertyChanged(nameof(ss));
+            }
+        }
+
+
         List<String> _avformats;
         public List<String> AvailableFormats {
             get { return _avformats; }
@@ -148,6 +180,10 @@ namespace EZWEBMER_2._0.Viewmodels
                         break;
                     case "Video->Gif":
                         avf.Add(".gif");
+                        break;
+                    case "SnapAt":
+                        foreach (Models.ImageInfo.Formats x in Enum.GetValues(typeof(Models.ImageInfo.Formats)))
+                            avf.Add("." + x);
                         break;
                 }
                 AvailableFormats = avf;
@@ -212,7 +248,7 @@ namespace EZWEBMER_2._0.Viewmodels
                     }
                 }, (obj) =>
                 {
-                    return (SelectedFunc == "Video->Music" || SelectedFunc == "Video->Gif");
+                    return (SelectedFunc == "Video->Music" || SelectedFunc == "Video->Gif" || SelectedFunc == "SnapAt");
                 });
             }
         }
@@ -262,6 +298,9 @@ namespace EZWEBMER_2._0.Viewmodels
                             break;
                         case "Video->Gif":
                             Models.FFMpegProcess.VideoToGif(VideoInfo.Path);
+                            break;
+                        case "SnapAt":
+                            Models.FFMpegProcess.GetFrame(VideoInfo.Path, hh, mm, ss, SelectedFormat);
                             break;
                     }
 

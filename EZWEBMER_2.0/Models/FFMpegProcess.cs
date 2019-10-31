@@ -81,8 +81,8 @@ namespace EZWEBMER_2._0.Models
 
         public static void GetFrame(String input, int hh, int mm, int ss, String format=".png") {
             FileInfo fv = new FileInfo(input);
-            String output = initialFolder + Path.GetFileNameWithoutExtension(input)+"snapAt"+hh+":"+mm+":"+ss + format;
-            String cmdtext = "-ss " + hh + ":" + mm + ":" + ss + " -i \"" + input + "\" -f image2 -vframes 1 \""
+            String output = initialFolder + Path.GetFileNameWithoutExtension(input) + "-snapAt-" + hh + "h" + mm + "m" + ss + "s" + format;
+            String cmdtext = "-ss " + hh + ":" + mm + ":" + ss + " -i \"" + input + "\" -f image2 -vframes 1 -q:v 2 -r 1 \""
                 + output + "\"";
 
             if (File.Exists(output))
@@ -101,6 +101,7 @@ namespace EZWEBMER_2._0.Models
             l.Add("Img+Music=Video");
             l.Add("Video->Music");
             l.Add("Video->Gif");
+            l.Add("SnapAt");
 
             return l;
         }
