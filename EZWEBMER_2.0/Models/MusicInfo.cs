@@ -1,4 +1,6 @@
-﻿using NAudio.Wave;
+﻿using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +26,8 @@ namespace EZWEBMER_2._0.Models
             }
         }
 
+        TimeSpan duration;
+        /*
         public int duration { get; set; }
         public int position
         {
@@ -42,6 +46,7 @@ namespace EZWEBMER_2._0.Models
 
             }
         }
+        */
 
         public MusicInfo(String path) {
             isValid = false;
@@ -51,8 +56,9 @@ namespace EZWEBMER_2._0.Models
 
         public override void Load(String path) {
             this.Path = path;
-            afr = new AudioFileReader(path);
-            duration = (int)afr.TotalTime.TotalSeconds;
+            //afr = new AudioFileReader(path);
+            //duration = (int)afr.TotalTime.TotalSeconds;
+            duration = GetAudioDuration(path);
 
         }
         public override void Play()
@@ -77,6 +83,20 @@ namespace EZWEBMER_2._0.Models
             
         }
 
+        private static TimeSpan GetAudioDuration(string filePath)
+        {
+            using (var shell = ShellObject.FromParsingName(filePath))
+            {
+                IShellProperty prop = shell.Properties.System.Media.Duration;
+                var t = (ulong)prop.ValueAsObject;
+                return TimeSpan.FromTicks((long)t);
+
+            }
+        }
+
+        public int getSeconds() {
+            return (int)duration.TotalSeconds;
+        }
         public override String Information() {
             return "[" + (isValid ? "Valid" : "Invalid") + "]" + Path + " " + (isPlaying.ToString());
         }

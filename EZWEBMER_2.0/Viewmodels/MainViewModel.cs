@@ -114,7 +114,14 @@ namespace EZWEBMER_2._0.Viewmodels
             get { return _hh; }
             set
             {
-                _hh = value;
+                if (VideoInfo != null)
+                {
+                    if (value <= VideoInfo.getSeconds() / 3600)
+                        _hh = value;
+                    else if (value < 0) _hh = 0;
+                    else _hh = VideoInfo.getSeconds() / 3600;
+                }
+                else _hh = 0;
                 OnPropertyChanged(nameof(hh));
             }
         }
@@ -124,7 +131,14 @@ namespace EZWEBMER_2._0.Viewmodels
             get { return _mm; }
             set
             {
-                _mm = value;
+                if (VideoInfo != null)
+                {
+                    if (value <= VideoInfo.getSeconds() / 60)
+                        _mm = value;
+                    else if (value < 0) _mm = 0;
+                    else _mm = VideoInfo.getSeconds() / 60;
+                }
+                else _mm = 0;
                 OnPropertyChanged(nameof(mm));
             }
         }
@@ -134,7 +148,14 @@ namespace EZWEBMER_2._0.Viewmodels
             get { return _ss; }
             set
             {
-                _ss = value;
+                if (VideoInfo != null)
+                {
+                    if (value <= VideoInfo.getSeconds())
+                        _ss = value;
+                    else if (value < 0) _ss = 0;
+                    else _ss = VideoInfo.getSeconds();
+                }
+                else _ss = 0;
                 OnPropertyChanged(nameof(ss));
             }
         }
@@ -291,7 +312,7 @@ namespace EZWEBMER_2._0.Viewmodels
                     switch (SelectedFunc)
                     {
                         case "Img+Music=Video":
-                            Models.FFMpegProcess.StaticImgAndMusicVid(ImageInfo.Path, MusicInfo.Path, OutputName, MusicInfo.duration, SelectedFormat);
+                            Models.FFMpegProcess.StaticImgAndMusicVid(ImageInfo.Path, MusicInfo.Path, OutputName, MusicInfo.getSeconds(), SelectedFormat);
                             break;
                         case "Video->Music":
                             Models.FFMpegProcess.AudioFromVideo(VideoInfo.Path, SelectedFormat);
