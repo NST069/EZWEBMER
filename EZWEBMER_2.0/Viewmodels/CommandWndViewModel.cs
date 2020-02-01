@@ -37,6 +37,21 @@ namespace EZWEBMER_2._0.Viewmodels
             UpdateSeekBar();
         }
         */
+
+        private bool isReady
+        {
+            get
+            {
+                if (SelectedFunc == "Img+Music=Video")
+                {
+                    if (MusicInfo != null && ImageInfo != null)
+                        return MusicInfo.isValid && ImageInfo.isValid;
+                }
+                else if (VideoInfo != null) return true;
+                return false;
+            }
+        }
+
         private Models.ImageInfo _imageInfo;
         public Models.ImageInfo ImageInfo
         {
@@ -321,41 +336,28 @@ namespace EZWEBMER_2._0.Viewmodels
             }
         }*/
 
-        public ICommand Render
+        public void Execute()
         {
-            get
+            if (isReady)
             {
-                return new Models.DelegateCommand((obj) =>
+                switch (SelectedFunc)
                 {
-
-                    switch (SelectedFunc)
-                    {
-                        case "Img+Music=Video":
-                            Models.FFMpegProcess.StaticImgAndMusicVid(ImageInfo.Path, MusicInfo.Path, OutputName, MusicInfo.getSeconds(), SelectedFormat);
-                            break;
-                        case "Video->Music":
-                            Models.FFMpegProcess.AudioFromVideo(VideoInfo.Path, SelectedFormat);
-                            break;
-                        case "Video->Gif":
-                            Models.FFMpegProcess.VideoToGif(VideoInfo.Path);
-                            break;
-                        case "SnapAt":
-                            Models.FFMpegProcess.GetFrame(VideoInfo.Path, hh, mm, ss, SelectedFormat);
-                            break;
-                    }
-
-
-                }, (obj) => {
-                    if (SelectedFunc == "Img+Music=Video")
-                    {
-                        if (MusicInfo != null && ImageInfo != null)
-                            return MusicInfo.isValid && ImageInfo.isValid;
-                    }
-                    else if (VideoInfo != null) return true;
-                    return false;
-                });
+                    case "Img+Music=Video":
+                        Models.FFMpegProcess.StaticImgAndMusicVid(ImageInfo.Path, MusicInfo.Path, OutputName, MusicInfo.getSeconds(), SelectedFormat);
+                        break;
+                    case "Video->Music":
+                        Models.FFMpegProcess.AudioFromVideo(VideoInfo.Path, SelectedFormat);
+                        break;
+                    case "Video->Gif":
+                        Models.FFMpegProcess.VideoToGif(VideoInfo.Path);
+                        break;
+                    case "SnapAt":
+                        Models.FFMpegProcess.GetFrame(VideoInfo.Path, hh, mm, ss, SelectedFormat);
+                        break;
+                }
             }
         }
+
         /*
         public ICommand Slider_Down
         {
@@ -379,6 +381,8 @@ namespace EZWEBMER_2._0.Viewmodels
             }
         }
         */
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName]String info = "")

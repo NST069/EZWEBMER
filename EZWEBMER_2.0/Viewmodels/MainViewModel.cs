@@ -29,7 +29,6 @@ namespace EZWEBMER_2._0.Viewmodels
             }
         }
 
-
         public ICommand AddCmd
         {
             get
@@ -37,7 +36,7 @@ namespace EZWEBMER_2._0.Viewmodels
                 return new Models.DelegateCommand((obj) =>
                 {
                     Files.Add(new CommandWndViewModel());
-                }, (obj) => true);
+                }, (obj) => Files.Count<10);
             }
         }
 
@@ -47,10 +46,26 @@ namespace EZWEBMER_2._0.Viewmodels
             {
                 return new Models.DelegateCommand((obj) =>
                 {
-                    Files.RemoveAt(Files.Count - 1);
-                }, (obj) => Files.Count > 0); 
+                    List<CommandWndViewModel> list = ((Collection<object>)obj).Cast<CommandWndViewModel>().ToList();
+                    list.ForEach(f => Files.Remove(f));
+                }, (obj) => Files.Count > 0 && ((Collection<object>)obj).Count>0); 
             }
         }
+
+        public ICommand Render
+        {
+            get
+            {
+                return new Models.DelegateCommand((obj) =>
+                {
+                    foreach (var x in Files)
+                    {
+                        (x as CommandWndViewModel).Execute();
+                    }
+                }, (obj)=> Files.Count > 0);
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
