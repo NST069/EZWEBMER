@@ -7,52 +7,68 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:viewmodels="clr-namespace:EZWEBMER_2._0.Viewmodels"
         mc:Ignorable="d"
-        Title="EZWEBMER v2.0.1" Height="500" Width="400">
+        Title="EZWEBMER v2.0.2" Height="200" Width="800">
     <Window.DataContext>
         <viewmodels:MainViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="20px"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <!--<Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="400" Source="{Binding Path=ImageInfo.Path, Mode=TwoWay}"/>-->
-            <MediaElement Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" LoadedBehavior="Play" Source="{Binding Path=ImageInfo.Path, Mode=TwoWay}" SpeedRatio="1" IsMuted="False"/>
-            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="{Binding S_PlayPause}" Command="{Binding PlayPause}"/>
-                <Slider Grid.Column="1" Minimum="0" Maximum="{Binding aud_duration}" LargeChange="60" SmallChange="10" Value="{Binding aud_position}" TickPlacement="TopLeft" >
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseDown" >
-                            <i:InvokeCommandAction Command="{Binding Slider_Down}" />
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="PreviewMouseUp" >
-                            <i:InvokeCommandAction Command="{Binding Slider_Up}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Slider>
+                <Button Grid.Column="0" Content="+" Command="{Binding AddCmd}"/>
+                <Button Grid.Column="1" Content="-" Command="{Binding RemoveCmd}" CommandParameter="{Binding SelectedItems, ElementName=lv}"/>
+                <Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Content="Render" Command="{Binding Render}"/>
             </Grid>
-            <Button Grid.Row="2" Content="Open" Command="{Binding OpenFile}" Grid.ColumnSpan="2"/>
-            <StackPanel Grid.Row="3" Grid.Column="0">
-                <!--<Button Content="Open Image" Command="{Binding OpenImage}"/>-->
-                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding ImageStr}"/>
-            </StackPanel>
-            <StackPanel Grid.Row="3" Grid.Column="1">
-                <!--<Button Content="Open Audio" Command="{Binding OpenAudio}"/>-->
-                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding MusicStr}"/>
-            </StackPanel>
-            <Button Grid.Row="4" Content="Submit" Grid.ColumnSpan="2" Command="{Binding Render}"/>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                <ListView x:Name="lv" ItemsSource="{Binding Files}" Grid.IsSharedSizeScope="True" HorizontalContentAlignment = "Stretch" SelectionMode="Extended">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Grid.Row="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding AvailableFunctions}" SelectedItem="{Binding SelectedFunc}" IsSynchronizedWithCurrentItem="True"/>
+                                <Label Grid.Column="1" Grid.Row="0" Content="Image"/>
+                                <Button Grid.Column="1" Grid.Row="1" Content="{Binding ImageInfo.Path}" Command="{Binding OpenImage}"/>
+                                <Label Grid.Column="2" Grid.Row="0" Content="Audio"/>
+                                <Button Grid.Column="2" Grid.Row="1" Content="{Binding MusicInfo.Path}" Command="{Binding OpenAudio}"/>
+                                <Label Grid.Column="3" Grid.Row="0" Content="Video"/>
+                                <Button Grid.Column="3" Grid.Row="1" Content="{Binding VidPath}" Command="{Binding OpenVideo}"/>
+                                <Grid Grid.Column="4" Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Text="{Binding hh}"/>
+                                    <TextBox Grid.Column="1" Text="{Binding mm}"/>
+                                    <TextBox Grid.Column="2" Text="{Binding ss}"/>
+                                </Grid>
+                                <TextBox Grid.Column="4" Grid.Row="1" Text="{Binding OutputName}"/>
+                                <ComboBox Grid.Column="5" ItemsSource="{Binding AvailableFormats}" SelectedItem="{Binding SelectedFormat}" IsSynchronizedWithCurrentItem="True"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListView>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>
