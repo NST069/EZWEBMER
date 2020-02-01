@@ -58,10 +58,13 @@ namespace EZWEBMER_2._0.Viewmodels
             {
                 return new Models.DelegateCommand((obj) =>
                 {
+                    List<CommandWndViewModel> done = new List<CommandWndViewModel>();
                     foreach (var x in Files)
                     {
                         (x as CommandWndViewModel).Execute();
+                        done.Add(x);
                     }
+                    foreach (var x in done) Files.Remove(x);
                 }, (obj)=> Files.Count > 0);
             }
         }

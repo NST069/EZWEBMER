@@ -108,7 +108,7 @@ namespace EZWEBMER_2._0.Models
 
         static void ExecuteProcess(String cmd) {
             String folder = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName + @"\ffmpeg\";
-            String cmdtext = "/k cd \"" + folder + "\" & " +
+            String cmdtext = "/c cd \"" + folder + "\" & " +
                     "ffmpeg " + cmd;
             System.Diagnostics.Process process = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
@@ -118,6 +118,9 @@ namespace EZWEBMER_2._0.Models
             startInfo.Arguments = cmdtext;
             process.StartInfo = startInfo;
             process.Start();
+            process.WaitForExit();
+            if(process.ExitCode!=0)
+                System.Windows.MessageBox.Show("Error "+process.ExitCode);
         }
     }
 }
