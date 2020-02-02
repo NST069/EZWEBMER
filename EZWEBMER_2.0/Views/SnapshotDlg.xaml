@@ -1,0 +1,30 @@
+﻿<Window x:Class="EZWEBMER_2._0.Views.SnapshotDlg"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EZWEBMER_2._0.Views"
+        xmlns:viewmodels="clr-namespace:EZWEBMER_2._0.Viewmodels"
+        mc:Ignorable="d"
+        Title="SnapshotDlg" Height="80" Width="200">
+    <Window.DataContext>
+        <viewmodels:MainViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding hh}"/>
+                <TextBox Grid.Column="1" Text="{Binding mm}"/>
+                <TextBox Grid.Column="2" Text="{Binding ss}"/>
+                <ComboBox Grid.Column="3" ItemsSource="{Binding AvailableFormats}" SelectedItem="{Binding SelectedFormat}" IsSynchronizedWithCurrentItem="True"/>
+            </Grid>
+            <Button Content="Take Snapshot" Command="{Binding Snapshot}"/>
+        </StackPanel>
+    </Grid>
+</Window>

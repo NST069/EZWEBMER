@@ -131,57 +131,7 @@ namespace EZWEBMER_2._0.Viewmodels
             }
         }
 
-        int _hh;
-        public int hh
-        {
-            get { return _hh; }
-            set
-            {
-                if (VideoInfo != null)
-                {
-                    if (value <= VideoInfo.getSeconds() / 3600)
-                        _hh = value;
-                    else if (value < 0) _hh = 0;
-                    else _hh = VideoInfo.getSeconds() / 3600;
-                }
-                else _hh = 0;
-                OnPropertyChanged(nameof(hh));
-            }
-        }
-        int _mm;
-        public int mm
-        {
-            get { return _mm; }
-            set
-            {
-                if (VideoInfo != null)
-                {
-                    if (value <= VideoInfo.getSeconds() / 60)
-                        _mm = value;
-                    else if (value < 0) _mm = 0;
-                    else _mm = VideoInfo.getSeconds() / 60;
-                }
-                else _mm = 0;
-                OnPropertyChanged(nameof(mm));
-            }
-        }
-        int _ss;
-        public int ss
-        {
-            get { return _ss; }
-            set
-            {
-                if (VideoInfo != null)
-                {
-                    if (value <= VideoInfo.getSeconds())
-                        _ss = value;
-                    else if (value < 0) _ss = 0;
-                    else _ss = VideoInfo.getSeconds();
-                }
-                else _ss = 0;
-                OnPropertyChanged(nameof(ss));
-            }
-        }
+        
 
 
         List<String> _avformats;
@@ -283,6 +233,22 @@ namespace EZWEBMER_2._0.Viewmodels
                 }, (obj) =>
                 {
                     return (SelectedFunc.name == "Video->Music" || SelectedFunc.name == "Video->Gif" || SelectedFunc.name == "SnapAt");
+                });
+            }
+        }
+
+        public ICommand Snapshot
+        {
+            get
+            {
+                return new Models.DelegateCommand((obj) =>
+                {
+                    Views.SnapshotDlg dlg = new Views.SnapshotDlg();
+                    Viewmodels.SnapshotDlgViewModel dlgvm = new SnapshotDlgViewModel(VideoInfo);
+                    dlg.DataContext = dlgvm;
+                    dlg.ShowDialog();
+                }, (obj)=> {
+                    return (VideoInfo != null);
                 });
             }
         }

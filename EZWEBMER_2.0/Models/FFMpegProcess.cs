@@ -58,7 +58,7 @@ namespace EZWEBMER_2._0.Models
         }
         public String GetCommand(ImageInfo pic = null, MusicInfo aud = null, VideoInfo vid = null, String fmt = "")
         {
-            return cmdGetter((pic != null) ? pic.Path : null, (aud != null) ? aud.Path : null, (vid != null) ? vid.Path : null, fmt);
+            return cmdGetter(pic?.Path, aud?.Path, vid?.Path, fmt);
         }
 
 

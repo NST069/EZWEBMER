@@ -53,14 +53,7 @@
                                 <Label Grid.Column="3" Grid.Row="0" Content="Video"/>
                                 <Button Grid.Column="3" Grid.Row="1" Content="{Binding VideoInfo.Path}" Command="{Binding OpenVideo}"/>
                                 <Grid Grid.Column="4" Grid.Row="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Grid.Column="0" Text="{Binding hh}"/>
-                                    <TextBox Grid.Column="1" Text="{Binding mm}"/>
-                                    <TextBox Grid.Column="2" Text="{Binding ss}"/>
+                                    <Button Content="Snapshot" Command="{Binding Snapshot}"/>
                                 </Grid>
                                 <TextBox Grid.Column="4" Grid.Row="1" Text="{Binding OutputName}"/>
                                 <ComboBox Grid.Column="5" ItemsSource="{Binding AvailableFormats}" SelectedItem="{Binding SelectedFormat}" IsSynchronizedWithCurrentItem="True"/>
