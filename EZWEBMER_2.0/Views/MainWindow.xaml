@@ -7,7 +7,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:viewmodels="clr-namespace:EZWEBMER_2._0.Viewmodels"
         mc:Ignorable="d"
-        Title="EZWEBMER v2.0.2" Height="200" Width="800">
+        Title="EZWEBMER v2.0.2" Height="600" Width="800">
     <Window.DataContext>
         <viewmodels:MainViewModel/>
     </Window.DataContext>
@@ -51,7 +51,7 @@
                                 <Label Grid.Column="2" Grid.Row="0" Content="Audio"/>
                                 <Button Grid.Column="2" Grid.Row="1" Content="{Binding MusicInfo.Path}" Command="{Binding OpenAudio}"/>
                                 <Label Grid.Column="3" Grid.Row="0" Content="Video"/>
-                                <Button Grid.Column="3" Grid.Row="1" Content="{Binding VidPath}" Command="{Binding OpenVideo}"/>
+                                <Button Grid.Column="3" Grid.Row="1" Content="{Binding VideoInfo.Path}" Command="{Binding OpenVideo}"/>
                                 <Grid Grid.Column="4" Grid.Row="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>

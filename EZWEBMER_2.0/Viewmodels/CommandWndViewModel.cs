@@ -42,7 +42,7 @@ namespace EZWEBMER_2._0.Viewmodels
         {
             get
             {
-                if (SelectedFunc == "Img+Music=Video")
+                if (SelectedFunc.name == "Img+Music=Video")
                 {
                     if (MusicInfo != null && ImageInfo != null)
                         return MusicInfo.isValid && ImageInfo.isValid;
@@ -205,7 +205,7 @@ namespace EZWEBMER_2._0.Viewmodels
             }
         }
 
-        public List<String> AvailableFunctions
+        public List<Models.RenderCommand> AvailableFunctions
         {
             get
             {
@@ -213,32 +213,13 @@ namespace EZWEBMER_2._0.Viewmodels
             }
         }
 
-        String _selectedfunc;
-        public String SelectedFunc
+        Models.RenderCommand _selectedfunc;
+        public Models.RenderCommand SelectedFunc
         {
             get { return _selectedfunc; }
             set
             {
-                List<String> avf = new List<String>();
-                switch (value)
-                {
-                    case "Img+Music=Video":
-                        foreach (Models.VideoInfo.Formats x in Enum.GetValues(typeof(Models.VideoInfo.Formats)))
-                            avf.Add("." + x);
-                        break;
-                    case "Video->Music":
-                        foreach (Models.MusicInfo.Formats x in Enum.GetValues(typeof(Models.MusicInfo.Formats)))
-                            avf.Add("." + x);
-                        break;
-                    case "Video->Gif":
-                        avf.Add(".gif");
-                        break;
-                    case "SnapAt":
-                        foreach (Models.ImageInfo.Formats x in Enum.GetValues(typeof(Models.ImageInfo.Formats)))
-                            avf.Add("." + x);
-                        break;
-                }
-                AvailableFormats = avf;
+                AvailableFormats = value.availableFormats;
                 _selectedfunc = value;
                 OnPropertyChanged(nameof(SelectedFunc));
             }
@@ -257,7 +238,7 @@ namespace EZWEBMER_2._0.Viewmodels
                         //ImageStr += "";
                     }
 
-                }, (obj) => { return (SelectedFunc == "Img+Music=Video"); });
+                }, (obj) => { return (SelectedFunc.name == "Img+Music=Video" || SelectedFunc.name == "Gif->Video"); });
             }
         }
         public ICommand OpenAudio
@@ -283,7 +264,7 @@ namespace EZWEBMER_2._0.Viewmodels
                     }
                 }, (obj) =>
                 {
-                    return (SelectedFunc == "Img+Music=Video");
+                    return (SelectedFunc.name == "Img+Music=Video");
                 });
             }
         }
@@ -301,7 +282,7 @@ namespace EZWEBMER_2._0.Viewmodels
                     }
                 }, (obj) =>
                 {
-                    return (SelectedFunc == "Video->Music" || SelectedFunc == "Video->Gif" || SelectedFunc == "SnapAt");
+                    return (SelectedFunc.name == "Video->Music" || SelectedFunc.name == "Video->Gif" || SelectedFunc.name == "SnapAt");
                 });
             }
         }
@@ -340,21 +321,7 @@ namespace EZWEBMER_2._0.Viewmodels
         {
             if (isReady)
             {
-                switch (SelectedFunc)
-                {
-                    case "Img+Music=Video":
-                        Models.FFMpegProcess.StaticImgAndMusicVid(ImageInfo.Path, MusicInfo.Path, OutputName, MusicInfo.getSeconds(), SelectedFormat);
-                        break;
-                    case "Video->Music":
-                        Models.FFMpegProcess.AudioFromVideo(VideoInfo.Path, SelectedFormat);
-                        break;
-                    case "Video->Gif":
-                        Models.FFMpegProcess.VideoToGif(VideoInfo.Path);
-                        break;
-                    case "SnapAt":
-                        Models.FFMpegProcess.GetFrame(VideoInfo.Path, hh, mm, ss, SelectedFormat);
-                        break;
-                }
+                Models.FFMpegProcess.ExecuteProcess(SelectedFunc.GetCommand(ImageInfo, MusicInfo, VideoInfo, SelectedFormat));
             }
         }
 

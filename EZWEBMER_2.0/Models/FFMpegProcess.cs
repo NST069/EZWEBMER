@@ -9,8 +9,10 @@ using System.Windows;
 
 namespace EZWEBMER_2._0.Models
 {
-    static class FFMpegProcess
+    class RenderCommand
     {
+        public String name;
+        Func<String, String, String, String, String> cmdGetter; //picture, audio, video, format, OUT:command
         static String initialFolder
         {
             get
@@ -20,11 +22,52 @@ namespace EZWEBMER_2._0.Models
                 return fi.FullName;
             }
         }
-        public static void StaticImgAndMusicVid(String p, String m, String s, int duration, String format = ".webm") {
 
+        public List<String> availableFormats;
+
+        public RenderCommand(String cmdName)
+        {
+            name = cmdName;
+            availableFormats = new List<String>();
+            switch (cmdName)
+            {
+                case "Img+Music=Video":
+                    cmdGetter = ImgAndMusic2Vid;
+                    foreach (Models.VideoInfo.Formats x in Enum.GetValues(typeof(Models.VideoInfo.Formats)))
+                        availableFormats.Add("." + x);
+                    break;
+                case "Video->Music":
+                    cmdGetter = Vid2Aud;
+                    foreach (Models.MusicInfo.Formats x in Enum.GetValues(typeof(Models.MusicInfo.Formats)))
+                        availableFormats.Add("." + x);
+                    break;
+                case "Video->Gif":
+                    cmdGetter = Vid2Gif;
+                    availableFormats.Add(".gif");
+                    break;
+                case "Gif->Video":
+                    cmdGetter = Gif2Vid;
+                    foreach (Models.VideoInfo.Formats x in Enum.GetValues(typeof(Models.VideoInfo.Formats)))
+                        availableFormats.Add("." + x);
+                    break;
+                default:
+                    cmdGetter = null;
+                    break;
+
+            }
+        }
+        public String GetCommand(ImageInfo pic = null, MusicInfo aud = null, VideoInfo vid = null, String fmt = "")
+        {
+            return cmdGetter((pic != null) ? pic.Path : null, (aud != null) ? aud.Path : null, (vid != null) ? vid.Path : null, fmt);
+        }
+
+
+        String ImgAndMusic2Vid(String p, String m, String v, String format = ".webm")
+        {
             FileInfo fp = new FileInfo(p);
             FileInfo fm = new FileInfo(m);
-            String output = initialFolder + s + format;
+            int duration = (new MusicInfo(m)).getSeconds();
+            String output = initialFolder + v + format;
 
             String cmdtext = ((fp.Extension == ".gif") ? (" -ignore_loop 0 ") : ("-loop 1 -r 1 ")) +
                 "-i \"" + p + "\"" +
@@ -38,17 +81,17 @@ namespace EZWEBMER_2._0.Models
             {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Overwrite existing file?", "File " + Path.GetFileNameWithoutExtension(output) + " already exists", System.Windows.MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes) cmdtext += "-y";
-                else return;
+                else return "";
             }
 
-            ExecuteProcess(cmdtext);
-
+            return cmdtext;
         }
 
-        public static void AudioFromVideo(String input, String format = ".mp3") {
-            FileInfo fv = new FileInfo(input);
-            String output = initialFolder + Path.GetFileNameWithoutExtension(input) + format;
-            String cmdtext = "-i \"" + input + "\" -ar 44100 -ac 2";
+        String Vid2Aud(String p, String m, String v, String format = ".webm")
+        {
+            FileInfo fv = new FileInfo(v);
+            String output = initialFolder + Path.GetFileNameWithoutExtension(v) + format;
+            String cmdtext = "-i \"" + v + "\" -ar 44100 -ac 2";
             if (format == ".mp3") cmdtext += " -vn -acodec mp3 -ab 320 ";
             else if (format == ".wav") cmdtext += " -vn -acodec pcm_s16le ";
             else if (format == ".flac") cmdtext += "-acodec flac -bits_per_raw_sample 16";
@@ -58,25 +101,70 @@ namespace EZWEBMER_2._0.Models
             {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Overwrite existing file?", "File " + Path.GetFileNameWithoutExtension(output) + " already exists", System.Windows.MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes) cmdtext += "-y";
-                else return;
+                else return "";
             }
 
-            ExecuteProcess(cmdtext);
+            return cmdtext;
         }
-
-        public static void VideoToGif(String input) {
-            FileInfo fv = new FileInfo(input);
-            String output = initialFolder + Path.GetFileNameWithoutExtension(input) + ".gif";
-            String cmdtext = "-i \"" + input + "\" \"" + output + "\"";
+        String Vid2Gif(String p, String m, String v, String format = ".webm")
+        {
+            FileInfo fv = new FileInfo(v);
+            String output = initialFolder + Path.GetFileNameWithoutExtension(v) + ".gif";
+            String cmdtext = "-i \"" + v + "\" \"" + output + "\"";
 
             if (File.Exists(output))
             {
                 MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Overwrite existing file?", "File " + Path.GetFileNameWithoutExtension(output) + " already exists", System.Windows.MessageBoxButton.YesNo);
                 if (messageBoxResult == MessageBoxResult.Yes) cmdtext += "-y";
-                else return;
+                else return "";
             }
 
-            ExecuteProcess(cmdtext);
+            return cmdtext;
+        }
+        String Gif2Vid(String p, String m, String v, String format = ".webm")
+        {
+            FileInfo fp = new FileInfo(p);
+            String output = initialFolder + v + format;
+
+            String cmdtext = "-i \"" + p +
+                "-movflags faststart -pix_fmt yuv420p -vf \"scale = trunc(iw / 2) * 2:trunc(ih / 2) * 2\" " +
+                output;
+
+            if (File.Exists(output))
+            {
+                MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Overwrite existing file?", "File " + Path.GetFileNameWithoutExtension(output) + " already exists", System.Windows.MessageBoxButton.YesNo);
+                if (messageBoxResult == MessageBoxResult.Yes) cmdtext += "-y";
+                else return "";
+            }
+
+            return cmdtext;
+        }
+
+        public override string ToString()
+        {
+            return name;
+        }
+    }
+
+    static class FFMpegProcess
+    {
+        static String initialFolder
+        {
+            get
+            {
+                FileInfo fi = new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\EZWEBMER\");
+                if (!fi.Directory.Exists) fi.Directory.Create();
+                return fi.FullName;
+            }
+        }
+        static List<RenderCommand> cmdList = new List<RenderCommand>();
+
+        static FFMpegProcess() {
+            cmdList.Add(new RenderCommand("Img+Music=Video"));
+            cmdList.Add(new RenderCommand("Video->Music"));
+            cmdList.Add(new RenderCommand("Video->Gif"));
+            cmdList.Add(new RenderCommand("Gif->Video"));
+            //cmdList.Add("SnapAt");
         }
 
         public static void GetFrame(String input, int hh, int mm, int ss, String format=".png") {
@@ -95,18 +183,11 @@ namespace EZWEBMER_2._0.Models
             ExecuteProcess(cmdtext);
         }
 
-        public static List<String> GetFunctions() {
-            List<String> l = new List<String>();
-
-            l.Add("Img+Music=Video");
-            l.Add("Video->Music");
-            l.Add("Video->Gif");
-            l.Add("SnapAt");
-
-            return l;
+        public static List<RenderCommand> GetFunctions() {
+            return cmdList;
         }
 
-        static void ExecuteProcess(String cmd) {
+        public static void ExecuteProcess(String cmd) {
             String folder = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName + @"\ffmpeg\";
             String cmdtext = "/c cd \"" + folder + "\" & " +
                     "ffmpeg " + cmd;
