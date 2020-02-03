@@ -1,4 +1,6 @@
-﻿using NAudio.Wave;
+﻿using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,15 +25,10 @@ namespace EZWEBMER_2._0.Models
                 return PlaybackState.Stopped;
             }
         }
-        public int duration
-        {
-            get
-            {
-                if (outputDevice != null)
-                    return (int)afr.TotalTime.TotalSeconds;
-                return 0;
-            }
-        }
+
+        TimeSpan duration;
+        /*
+        public int duration { get; set; }
         public int position
         {
             get
@@ -49,6 +46,7 @@ namespace EZWEBMER_2._0.Models
 
             }
         }
+        */
 
         public MusicInfo(String path) {
             isValid = false;
@@ -58,7 +56,9 @@ namespace EZWEBMER_2._0.Models
 
         public void Load(String path) {
             this.Path = path;
-            afr = new AudioFileReader(path);
+            //afr = new AudioFileReader(path);
+            //duration = (int)afr.TotalTime.TotalSeconds;
+            duration = GetAudioDuration(path);
 
         }
         public void Play()
@@ -83,7 +83,21 @@ namespace EZWEBMER_2._0.Models
             
         }
 
-        public String Information() {
+        private static TimeSpan GetAudioDuration(string filePath)
+        {
+            using (var shell = ShellObject.FromParsingName(filePath))
+            {
+                IShellProperty prop = shell.Properties.System.Media.Duration;
+                var t = (ulong)prop.ValueAsObject;
+                return TimeSpan.FromTicks((long)t);
+
+            }
+        }
+
+        public int getSeconds() {
+            return (int)duration.TotalSeconds;
+        }
+        public override String Information() {
             return "[" + (isValid ? "Valid" : "Invalid") + "]" + Path + " " + (isPlaying.ToString());
         }
 
@@ -101,7 +115,7 @@ namespace EZWEBMER_2._0.Models
         }
 
         public enum Formats {
-            wav, mp3
+            wav, mp3, flac
         }
     }
 }
