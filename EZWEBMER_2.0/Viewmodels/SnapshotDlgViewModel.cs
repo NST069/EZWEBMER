@@ -5,12 +5,15 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace EZWEBMER_2._0.Viewmodels
 {
     class SnapshotDlgViewModel : INotifyPropertyChanged
     {
+        public Views.IMediaService MediaService { get; set; }
+
         private Models.VideoInfo _videoinfo;
         public Models.VideoInfo VideoInfo
         {
@@ -22,9 +25,11 @@ namespace EZWEBMER_2._0.Viewmodels
             }
         }
 
-        public SnapshotDlgViewModel(Models.VideoInfo vi) {
+        public SnapshotDlgViewModel(Models.VideoInfo vi)
+        {
             VideoInfo = vi;
             List<String> l = new List<String>();
+            //https://stackoverflow.com/questions/10631748/mvvm-pattern-violation-mediaelement-play
             foreach (Models.ImageInfo.Formats x in Enum.GetValues(typeof(Models.ImageInfo.Formats)))
                 l.Add("." + x);
             AvailableFormats = l;
@@ -34,7 +39,9 @@ namespace EZWEBMER_2._0.Viewmodels
         int _hh;
         public int hh
         {
-            get { return _hh; }
+            get {
+                return _hh;
+            }
             set
             {
                 if (VideoInfo != null)
@@ -112,6 +119,45 @@ namespace EZWEBMER_2._0.Viewmodels
                 {
                     Models.FFMpegProcess.GetFrame(VideoInfo.Path, hh, mm, ss, SelectedFormat);
                     
+                });
+            }
+        }
+
+        //UPDATE 
+        // hh=MediaService.GetPosition() % 3600;
+        // mm=(MediaService.GetPosition() % 3600) % 60;
+        // ss=((MediaService.GetPosition() % 3600) % 60) %60;
+
+        public ICommand Loaded
+        {
+            get
+            {
+                return new Models.DelegateCommand((obj) =>
+                    {
+                        this.MediaService = obj as Views.IMediaService;
+                        this.MediaService.Load(VideoInfo.Path);
+                        this.MediaService.Play();
+                        //this.MediaService.Pause();
+                    });
+            }
+        }
+
+        public ICommand Updated {
+            get {
+                return new Models.DelegateCommand((obj)=> {
+                    hh =MediaService.GetPosition() % 3600;
+                    mm=(MediaService.GetPosition() % 3600) % 60;
+                    ss=((MediaService.GetPosition() % 3600) % 60) %60;
+                });
+            }
+        }
+        public ICommand SkipTo {
+            get {
+                return new Models.DelegateCommand((obj) => {
+                    this.MediaService.Stop();
+                    this.MediaService.SkipTo(hh * 3600 + mm * 60 + ss);
+                    this.MediaService.Play();
+                    this.MediaService.Pause();
                 });
             }
         }

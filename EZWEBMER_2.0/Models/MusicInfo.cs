@@ -43,25 +43,26 @@ namespace EZWEBMER_2._0.Models
                 {
                     afr.CurrentTime = TimeSpan.FromSeconds(value);
                 }
-
             }
         }
         */
 
-        public MusicInfo(String path) {
+        public MusicInfo(String path)
+        {
             isValid = false;
-            Load(path);            
+            Load(path);
             isValid = true;
         }
 
-        public void Load(String path) {
+        public override void Load(String path)
+        {
             this.Path = path;
             //afr = new AudioFileReader(path);
             //duration = (int)afr.TotalTime.TotalSeconds;
             duration = GetAudioDuration(path);
 
         }
-        public void Play()
+        public override void Play()
         {
             Task.Factory.StartNew(() =>
             {
@@ -80,7 +81,7 @@ namespace EZWEBMER_2._0.Models
                     outputDevice.Play();
                 }
             });
-            
+
         }
 
         private static TimeSpan GetAudioDuration(string filePath)
@@ -94,17 +95,21 @@ namespace EZWEBMER_2._0.Models
             }
         }
 
-        public int getSeconds() {
+        public int getSeconds()
+        {
             return (int)duration.TotalSeconds;
         }
-        public override String Information() {
+        public override String Information()
+        {
             return "[" + (isValid ? "Valid" : "Invalid") + "]" + Path + " " + (isPlaying.ToString());
         }
 
-        public void Stop(){
+        public void Stop()
+        {
             outputDevice?.Stop();
         }
-        public void Pause() {
+        public void Pause()
+        {
             outputDevice?.Pause();
         }
 
@@ -114,7 +119,8 @@ namespace EZWEBMER_2._0.Models
             outputDevice = null;
         }
 
-        public enum Formats {
+        public enum Formats
+        {
             wav, mp3, flac
         }
     }

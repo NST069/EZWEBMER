@@ -184,11 +184,12 @@ namespace EZWEBMER_2._0.Models
         }
 
         public static List<RenderCommand> GetFunctions() {
-            return cmdList;
+            List<RenderCommand> l = new List<RenderCommand>(cmdList);
+            return l;
         }
 
         public static void ExecuteProcess(String cmd) {
-            String folder = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName + @"\ffmpeg\";
+            String folder = Unosquare.FFME.Library.FFmpegDirectory;
             String cmdtext = "/c cd \"" + folder + "\" & " +
                     "ffmpeg " + cmd;
             System.Diagnostics.Process process = new System.Diagnostics.Process();

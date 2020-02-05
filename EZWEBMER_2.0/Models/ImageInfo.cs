@@ -16,13 +16,14 @@ namespace EZWEBMER_2._0.Models
         public int Height;
         public int Width;
 
-        public ImageInfo(String path) {
+        public ImageInfo(String path)
+        {
             isValid = false;
             Load(path);
             isValid = true;
         }
 
-        public void Load(string path)
+        public override void Load(string path)
         {
             this.Path = path;
             image = new BitmapImage(new Uri(path));
@@ -44,23 +45,25 @@ namespace EZWEBMER_2._0.Models
             }
         }
 
-        public void Play()
+        public override void Play()
         {
             throw new NotImplementedException();
         }
 
-        public String Information()
+        public override String Information()
         {
             return "[" + (isValid ? "Valid" : "Invalid") + "]" + Path + " " + Width + "x" + Height;
         }
 
-        private void AddPixel(bool horizontal) {
+        private void AddPixel(bool horizontal)
+        {
             if (horizontal) { }
             else { }
         }
 
 
-        public enum Formats {
+        public enum Formats
+        {
             png, jpg, gif
         }
     }

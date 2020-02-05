@@ -4,16 +4,30 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EZWEBMER_2._0.Views"
+        xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
+        xmlns:ia="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:viewmodels="clr-namespace:EZWEBMER_2._0.Viewmodels"
         mc:Ignorable="d"
-        Title="SnapshotDlg" Height="80" Width="200">
+        x:Name="MediaService"
+        Title="SnapshotDlg" Height="600" Width="640">
     <Window.DataContext>
         <viewmodels:MainViewModel/>
     </Window.DataContext>
     <Grid>
         <StackPanel>
+            <ffme:MediaElement x:Name="MediaPlayer" LoadedBehavior="Manual" >
+                <ia:Interaction.Triggers>
+                    <ia:EventTrigger EventName="Loaded">
+                        <ia:InvokeCommandAction Command="{Binding Loaded}" CommandParameter="{Binding ElementName=MediaService}"></ia:InvokeCommandAction>
+                    </ia:EventTrigger>
+                    <ia:EventTrigger EventName="PositionChanged">
+                        <ia:InvokeCommandAction Command="{Binding Updated}" CommandParameter="{Binding ElementName=MediaService}"></ia:InvokeCommandAction>
+                    </ia:EventTrigger>
+                </ia:Interaction.Triggers>
+            </ffme:MediaElement>
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -22,7 +36,8 @@
                 <TextBox Grid.Column="0" Text="{Binding hh}"/>
                 <TextBox Grid.Column="1" Text="{Binding mm}"/>
                 <TextBox Grid.Column="2" Text="{Binding ss}"/>
-                <ComboBox Grid.Column="3" ItemsSource="{Binding AvailableFormats}" SelectedItem="{Binding SelectedFormat}" IsSynchronizedWithCurrentItem="True"/>
+                <Button Grid.Column="3" Content="Check" Command="{Binding SkipTo}"/>
+                <ComboBox Grid.Column="4" ItemsSource="{Binding AvailableFormats}" SelectedItem="{Binding SelectedFormat}" IsSynchronizedWithCurrentItem="True"/>
             </Grid>
             <Button Content="Take Snapshot" Command="{Binding Snapshot}"/>
         </StackPanel>

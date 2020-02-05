@@ -12,22 +12,18 @@ namespace EZWEBMER_2._0.Models
     {
         public String Path { get; set; }
         TimeSpan duration;
-        public VideoInfo(String path) {
+        public VideoInfo(String path)
+        {
             Load(path);
         }
 
-        public string Information()
+        public override void Load(string path)
         {
             this.Path = path;
             duration = GetVideoDuration(path);
         }
 
-        public void Load(string path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Play()
+        public override void Play()
         {
             throw new NotImplementedException();
         }
@@ -39,15 +35,17 @@ namespace EZWEBMER_2._0.Models
                 IShellProperty prop = shell.Properties.System.Media.Duration;
                 var t = (ulong)prop.ValueAsObject;
                 return TimeSpan.FromTicks((long)t);
-                
+
             }
         }
 
-        public int getSeconds() {
+        public int getSeconds()
+        {
             return (int)duration.TotalSeconds;
         }
 
-        public enum Formats {
+        public enum Formats
+        {
             webm, mp4
         }
     }
