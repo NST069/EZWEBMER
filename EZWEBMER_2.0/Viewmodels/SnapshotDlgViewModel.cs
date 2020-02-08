@@ -38,7 +38,8 @@ namespace EZWEBMER_2._0.Viewmodels
         int _hh;
         public int hh
         {
-            get {
+            get
+            {
                 return _hh;
             }
             set
@@ -46,9 +47,16 @@ namespace EZWEBMER_2._0.Viewmodels
                 if (VideoInfo != null)
                 {
                     if (value <= VideoInfo.getSeconds() / 3600)
-                        _hh = value;
-                    else if (value < 0) _hh = 0;
-                    else _hh = VideoInfo.getSeconds() / 3600;
+                    {
+                        if (value < 0) _hh = 0;
+                        else _hh = value;
+                    }
+                    else
+                    {
+                        ss = VideoInfo.getSeconds() % 60;
+                        mm = VideoInfo.getSeconds() / 60 % 60;
+                        hh = VideoInfo.getSeconds() / 3600;
+                    }
                 }
                 else _hh = 0;
                 OnPropertyChanged(nameof(hh));
@@ -63,9 +71,21 @@ namespace EZWEBMER_2._0.Viewmodels
                 if (VideoInfo != null)
                 {
                     if (value <= VideoInfo.getSeconds() / 60)
-                        _mm = value;
-                    else if (value < 0) _mm = 0;
-                    else _mm = VideoInfo.getSeconds() / 60;
+                    {
+                        if (value < 0) _mm = 0;
+                        else if (value >= 60)
+                        {
+                            hh += value / 60;
+                            mm = value % 60;
+                        }
+                        else _mm = value;
+                    }
+                    else
+                    {
+                        ss = VideoInfo.getSeconds() % 60;
+                        mm = VideoInfo.getSeconds() / 60 % 60;
+                        hh = VideoInfo.getSeconds() / 3600;
+                    }
                 }
                 else _mm = 0;
                 OnPropertyChanged(nameof(mm));
@@ -80,9 +100,21 @@ namespace EZWEBMER_2._0.Viewmodels
                 if (VideoInfo != null)
                 {
                     if (value <= VideoInfo.getSeconds())
-                        _ss = value;
-                    else if (value < 0) _ss = 0;
-                    else _ss = VideoInfo.getSeconds();
+                    {
+                        if (value < 0) _ss = 0;
+                        else if (value >= 60)
+                        {
+                            mm += value / 60;
+                            ss = value % 60;
+                        }
+                        else _ss = value;
+                    }
+                    else
+                    {
+                        ss = VideoInfo.getSeconds() % 60;
+                        mm = VideoInfo.getSeconds() / 60 % 60;
+                        hh = VideoInfo.getSeconds() / 3600;
+                    }
                 }
                 else _ss = 0;
                 OnPropertyChanged(nameof(ss));
