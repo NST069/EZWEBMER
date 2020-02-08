@@ -35,25 +35,25 @@ namespace EZWEBMER_2._0.Views
         {
             InitializeComponent();
         }
-        async void IMediaService.Load(String Path) {
+        void IMediaService.Load(String Path) {
             this.MediaPlayer.BeginInit();
-            bool x = await this.MediaPlayer.Open(new Uri(Path));
-            if(!x) System.Windows.MessageBox.Show("Error "+ this.MediaPlayer.MediaInfo.MediaSource);
+            this.MediaPlayer.Source = new Uri(Path);
             this.MediaPlayer.EndInit();
+            if (!this.MediaPlayer.IsLoaded) System.Windows.MessageBox.Show("Error loading "+this.MediaPlayer.Source);
         }
-        async void IMediaService.Pause()
+        void IMediaService.Pause()
         {
-            await this.MediaPlayer.Pause();
-        }
-
-        async void IMediaService.Play()
-        {
-            await this.MediaPlayer.Play();
+            this.MediaPlayer.Pause();
         }
 
-        async void IMediaService.Stop()
+        void IMediaService.Play()
         {
-            await this.MediaPlayer.Stop();
+            this.MediaPlayer.Play();
+        }
+
+        void IMediaService.Stop()
+        {
+            this.MediaPlayer.Stop();
         }
 
         void IMediaService.SkipTo(int ss) {

@@ -9,13 +9,13 @@
         xmlns:viewmodels="clr-namespace:EZWEBMER_2._0.Viewmodels"
         mc:Ignorable="d"
         x:Name="MediaService"
-        Title="SnapshotDlg" Height="600" Width="640">
+        Title="Take Snapshot" Height="600" Width="640">
     <Window.DataContext>
         <viewmodels:MainViewModel/>
     </Window.DataContext>
     <Grid>
         <StackPanel>
-            <ffme:MediaElement x:Name="MediaPlayer" LoadedBehavior="Manual" >
+            <MediaElement x:Name="MediaPlayer" Height="480" LoadedBehavior="Manual">
                 <ia:Interaction.Triggers>
                     <ia:EventTrigger EventName="Loaded">
                         <ia:InvokeCommandAction Command="{Binding Loaded}" CommandParameter="{Binding ElementName=MediaService}"></ia:InvokeCommandAction>
@@ -24,7 +24,7 @@
                         <ia:InvokeCommandAction Command="{Binding Updated}" CommandParameter="{Binding ElementName=MediaService}"></ia:InvokeCommandAction>
                     </ia:EventTrigger>
                 </ia:Interaction.Triggers>
-            </ffme:MediaElement>
+            </MediaElement>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>

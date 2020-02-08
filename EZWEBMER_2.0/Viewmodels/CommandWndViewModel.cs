@@ -248,7 +248,7 @@ namespace EZWEBMER_2._0.Viewmodels
                     dlg.DataContext = dlgvm;
                     dlg.ShowDialog();
                 }, (obj)=> {
-                    return false;//(VideoInfo != null);
+                    return (VideoInfo != null);
                 });
             }
         }

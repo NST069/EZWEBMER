@@ -7,7 +7,7 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:viewmodels="clr-namespace:EZWEBMER_2._0.Viewmodels"
         mc:Ignorable="d"
-        Title="EZWEBMER v2.0.2" Height="600" Width="800">
+        Title="EZWEBMER v2.0.3" Height="600" Width="800">
     <Window.DataContext>
         <viewmodels:MainViewModel/>
     </Window.DataContext>

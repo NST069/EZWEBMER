@@ -29,7 +29,6 @@ namespace EZWEBMER_2._0.Viewmodels
         {
             VideoInfo = vi;
             List<String> l = new List<String>();
-            //https://stackoverflow.com/questions/10631748/mvvm-pattern-violation-mediaelement-play
             foreach (Models.ImageInfo.Formats x in Enum.GetValues(typeof(Models.ImageInfo.Formats)))
                 l.Add("." + x);
             AvailableFormats = l;
@@ -137,7 +136,7 @@ namespace EZWEBMER_2._0.Viewmodels
                         this.MediaService = obj as Views.IMediaService;
                         this.MediaService.Load(VideoInfo.Path);
                         this.MediaService.Play();
-                        //this.MediaService.Pause();
+                        this.MediaService.SkipTo(0);
                     });
             }
         }
@@ -154,10 +153,11 @@ namespace EZWEBMER_2._0.Viewmodels
         public ICommand SkipTo {
             get {
                 return new Models.DelegateCommand((obj) => {
-                    this.MediaService.Stop();
+                    //this.MediaService.Stop();
+                    //this.MediaService.Pause();
                     this.MediaService.SkipTo(hh * 3600 + mm * 60 + ss);
                     this.MediaService.Play();
-                    this.MediaService.Pause();
+                    //this.MediaService.Pause();
                 });
             }
         }
