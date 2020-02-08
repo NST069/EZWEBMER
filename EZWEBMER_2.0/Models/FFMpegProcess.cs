@@ -184,7 +184,8 @@ namespace EZWEBMER_2._0.Models
         }
 
         public static List<RenderCommand> GetFunctions() {
-            return cmdList;
+            List<RenderCommand> l = new List<RenderCommand>(cmdList);
+            return l;
         }
 
         public static void ExecuteProcess(String cmd) {
