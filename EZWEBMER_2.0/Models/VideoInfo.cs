@@ -16,13 +16,18 @@ namespace EZWEBMER_2._0.Models
             Load(path);
         }
 
-        public override void Load(string path)
+        public string Information()
         {
             this.Path = path;
             duration = GetVideoDuration(path);
         }
 
-        public override void Play()
+        public void Load(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Play()
         {
             throw new NotImplementedException();
         }

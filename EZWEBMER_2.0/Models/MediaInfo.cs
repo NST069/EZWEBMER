@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace EZWEBMER_2._0.Models
 {
-    abstract class MediaInfo
+    interface MediaInfo
     {
-        public abstract void Load(String Path);
-        public abstract void Play();
-        public virtual String Information() {
-            return "Empty Media File";
-        }
+        void Load(String Path);
+        void Play();
+        String Information();
     }
 }

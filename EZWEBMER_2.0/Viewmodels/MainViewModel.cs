@@ -25,7 +25,6 @@ namespace EZWEBMER_2._0.Viewmodels
             {
                 _files = value;
                 OnPropertyChanged(nameof(Files));
-
             }
         }
 
