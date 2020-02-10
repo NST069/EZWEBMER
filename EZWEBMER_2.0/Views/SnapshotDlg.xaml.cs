@@ -40,6 +40,8 @@ namespace EZWEBMER_2._0.Views
             this.MediaPlayer.Source = new Uri(Path);
             this.MediaPlayer.EndInit();
             if (!this.MediaPlayer.IsLoaded) System.Windows.MessageBox.Show("Error loading "+this.MediaPlayer.Source);
+            this.MediaPlayer.Play();
+            this.MediaPlayer.Pause();
         }
         void IMediaService.Pause()
         {
@@ -58,6 +60,8 @@ namespace EZWEBMER_2._0.Views
 
         void IMediaService.SkipTo(int ss) {
             this.MediaPlayer.Position = TimeSpan.FromSeconds(ss);
+            this.MediaPlayer.Play();
+            this.MediaPlayer.Pause();
         }
 
         int IMediaService.GetPosition() {            

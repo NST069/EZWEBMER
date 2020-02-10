@@ -167,8 +167,6 @@ namespace EZWEBMER_2._0.Viewmodels
                     {
                         this.MediaService = obj as Views.IMediaService;
                         this.MediaService.Load(VideoInfo.Path);
-                        this.MediaService.Play();
-                        this.MediaService.SkipTo(0);
                     });
             }
         }
@@ -185,11 +183,9 @@ namespace EZWEBMER_2._0.Viewmodels
         public ICommand SkipTo {
             get {
                 return new Models.DelegateCommand((obj) => {
-                    //this.MediaService.Stop();
-                    //this.MediaService.Pause();
                     this.MediaService.SkipTo(hh * 3600 + mm * 60 + ss);
                     this.MediaService.Play();
-                    //this.MediaService.Pause();
+                    this.MediaService.Pause();
                 });
             }
         }

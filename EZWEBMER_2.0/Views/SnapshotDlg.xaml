@@ -15,7 +15,7 @@
     </Window.DataContext>
     <Grid>
         <StackPanel>
-            <MediaElement x:Name="MediaPlayer" Height="480" LoadedBehavior="Manual">
+            <MediaElement x:Name="MediaPlayer" Height="480" LoadedBehavior="Manual" ScrubbingEnabled="True">
                 <ia:Interaction.Triggers>
                     <ia:EventTrigger EventName="Loaded">
                         <ia:InvokeCommandAction Command="{Binding Loaded}" CommandParameter="{Binding ElementName=MediaService}"></ia:InvokeCommandAction>
